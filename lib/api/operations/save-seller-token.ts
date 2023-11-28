@@ -5,7 +5,6 @@ import { parse } from 'url'
 
 import { apiAuthClient } from '../util/api-auth-client'
 import { getApiConfig } from '../util/config-helpers'
-import { replaceUrlTenantSite } from '../util/seller'
 import { prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
 
 const { publicRuntimeConfig } = getConfig()
@@ -55,27 +54,27 @@ const getRefreshToken = (req: NextApiRequest) => {
   }
 }
 
-const getAuthHost = (tenant: string, site: string) => {
-  const authHost = getApiConfig().authHost
-  const url = `https://${authHost}/api/platform/adminuser/authtickets/tenants?tenantId=${tenant}`
-
-  return replaceUrlTenantSite(url, tenant, site)
+const getAdminUserHost = (tenant: string) => {
+  const adminUserHost = getApiConfig().adminUserHost
+  const url = `https://${adminUserHost}${tenant}`
+  return url
 }
 
 const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get tenant, site, redirect and refreshToken from request
   const { query } = parse(req.url as string, true)
   const { tenant, site } = query
+
   const refreshToken = getRefreshToken(req)
 
   // Get authToken
   const authToken = await apiAuthClient.getAccessToken()
 
   // Construct url and headers
-  const url = getAuthHost(tenant as string, site as string)
+  const url = getAdminUserHost(tenant as string)
 
   const headers = new Headers()
-  headers.set('x-vol-site', site as string)
+  headers.set('x-vol-tenant', tenant as string)
   headers.set('Authorization', `Bearer ${authToken}`)
   headers.set('Content-Type', 'application/json')
 

@@ -1,7 +1,7 @@
 import vercelFetch from '@vercel/fetch'
 
 import { apiAuthClient } from './api-auth-client'
-import { getGraphqlUrl, getProxyGraphqlUrl } from './config-helpers'
+import { getGraphqlUrl } from './config-helpers'
 
 const fetch = vercelFetch()
 
@@ -13,7 +13,7 @@ const fetcher = async (
   const authToken = await apiAuthClient.getAccessToken()
 
   const isUserSeller = sellerTenantInfo ? true : false
-  const url = isUserSeller ? getProxyGraphqlUrl() : getGraphqlUrl()
+  const url = getGraphqlUrl()
 
   const headers = {
     Authorization: `Bearer ${authToken}`,

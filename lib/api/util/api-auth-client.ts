@@ -1,4 +1,5 @@
-import { APIAuthClient, AppAuthTicket, ShopperAuthClient } from '@kibocommerce/graphql-client'
+import { AppAuthTicket, ShopperAuthClient } from '@kibocommerce/graphql-client'
+import { APIAuthClient } from '@kibocommerce/sdk-authentication'
 import vercelFetch from '@vercel/fetch'
 
 import { getApiConfig } from './config-helpers'
@@ -12,7 +13,8 @@ const authTicketMemCache = {
     authTicket = newAuthTicket
   },
 }
-const apiAuthClient = new APIAuthClient(getApiConfig(), fetch, authTicketMemCache)
+const apiAuthClient = new APIAuthClient(getApiConfig(), fetch, authTicketMemCache, true)
+
 const shopperAuthClient = new ShopperAuthClient(getApiConfig(), fetch, apiAuthClient)
 
 export { apiAuthClient, shopperAuthClient }
