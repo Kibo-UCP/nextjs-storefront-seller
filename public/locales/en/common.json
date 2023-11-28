@@ -522,5 +522,8 @@
   "product-details": "Product details",
   "additional-handling": "Additional Handling",
   "handling": "Handling",
-  "unit-price": "Unit Price"
+  "unit-price": "Unit Price",
+  "b2b-account-search-placeholder": "Search by account name, email address or address",
+  "create-quote-subtitle-seller": "Create a quote for an account from the list below",
+  "accounts-list": "Accounts list"
 }

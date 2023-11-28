@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import FilterList from '@mui/icons-material/FilterList'
 import {
@@ -13,20 +13,18 @@ import {
   TableRow,
   Tooltip,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import { AccountsTableStyles } from './AccountsTable.styles'
 import { KiboPagination, SearchBar } from '@/components/common'
-import { QuotesFilterDialog } from '@/components/dialogs'
+import { B2bContactsFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDebounce } from '@/hooks'
 import { addressGetters } from '@/lib/getters'
-// import { buildQuotesFilterParam } from '@/lib/helpers'
-// import { QuoteFilters,  } from '@/lib/types'
+import { buildB2bContactFilterParam } from '@/lib/helpers'
+import { B2bContactsFilters } from '@/lib/types'
 
 import { QueryQuotesArgs } from '@/lib/gql/types'
 
@@ -39,14 +37,16 @@ interface AccountsTableProps {
     items: any[]
   }
   showActionButtons?: boolean
-  // filters?: QuoteFilters
+  filters?: B2bContactsFilters
   setB2BContactsSearchParam: (param: QueryQuotesArgs) => void
 }
 
 const AccountsTable = (props: AccountsTableProps) => {
-  const { b2bContacts, showActionButtons = true, setB2BContactsSearchParam } = props
+  const { b2bContacts, showActionButtons = true, filters, setB2BContactsSearchParam } = props
 
   const { publicRuntimeConfig } = getConfig()
+
+  const { showModal } = useModalContext()
 
   const { t } = useTranslation('common')
 
@@ -84,19 +84,19 @@ const AccountsTable = (props: AccountsTableProps) => {
   const [searchTerm, setSearchTerm] = useState('')
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
-  // const handleFilterAction = (filters: QuoteFilters) => {
-  //   setQuotesSearchParam({ filter: buildQuotesFilterParam(filters) })
-  // }
+  const handleFilterAction = (filters: B2bContactsFilters) => {
+    setB2BContactsSearchParam({ filter: buildB2bContactFilterParam(filters) })
+  }
 
-  // const handleFilterButtonClick = () => {
-  //   showModal({
-  //     Component: QuotesFilterDialog,
-  //     props: {
-  //       filters: filters,
-  //       // onFilterAction: handleFilterAction,
-  //     },
-  //   })
-  // }
+  const handleFilterButtonClick = () => {
+    showModal({
+      Component: B2bContactsFilterDialog,
+      props: {
+        filters: filters,
+        onFilterAction: handleFilterAction,
+      },
+    })
+  }
 
   const handleAccountSearch = (term: string) => {
     setSearchTerm(term)
@@ -108,27 +108,33 @@ const AccountsTable = (props: AccountsTableProps) => {
     pageSize: b2bContacts?.pageSize,
   }
 
-  // useEffect(() => {
-  //   handleFilterAction({
-  //     ...filters,
-  //     ...(!parseInt(debouncedTerm) && { name: debouncedTerm.trim(), number: '' }),
-  //     ...(parseInt(debouncedTerm) && { number: debouncedTerm, name: debouncedTerm }),
-  //   })
-  // }, [debouncedTerm])
+  useEffect(() => {
+    handleFilterAction({
+      ...filters,
+      address: {
+        ...filters?.address,
+        address1: debouncedTerm.trim(),
+      },
+      email: debouncedTerm.trim(),
+      accountName: debouncedTerm.trim(),
+    })
+  }, [debouncedTerm])
 
   return (
     <>
       <Box sx={AccountsTableStyles.container}>
         <Box width="100%">
-          <SearchBar searchTerm={searchTerm} onSearch={handleAccountSearch} showClearButton />
+          <SearchBar
+            placeHolder={t('b2b-account-search-placeholder')}
+            searchTerm={searchTerm}
+            onSearch={handleAccountSearch}
+            showClearButton
+          />
         </Box>
         <Box sx={AccountsTableStyles.filterBar}>
           <Box>
             <Tooltip title="Filter list">
-              <IconButton
-                // onClick={handleFilterButtonClick}
-                data-testid="filter-button"
-              >
+              <IconButton onClick={handleFilterButtonClick} data-testid="filter-button">
                 <FilterList />
               </IconButton>
             </Tooltip>

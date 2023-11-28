@@ -33,7 +33,7 @@ import {
   buildUpdateCustomerB2bUserParams,
   filterAccountsByDisableSorting,
   hasPermission,
-  parseFilterParamToObject,
+  parseQuoteFilterParamToObject,
 } from '@/lib/helpers'
 import {
   AddChildAccountProps,
@@ -366,7 +366,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
         <QuotesTable
           quoteCollection={quoteCollection}
           sortingValues={sortingValues}
-          filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
+          filters={parseQuoteFilterParamToObject(quotesSearchParam.filter as string)}
           showActionButtons={false}
           setQuotesSearchParam={handleQuotesSearchParam}
         />

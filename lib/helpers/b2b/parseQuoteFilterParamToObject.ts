@@ -1,6 +1,6 @@
 import { QuoteFilters } from '@/lib/types'
 
-export const parseFilterParamToObject = (filterParam: string): QuoteFilters => {
+export const parseQuoteFilterParamToObject = (filterParam: string): QuoteFilters => {
   const filters: QuoteFilters = {
     name: '',
     number: '',
