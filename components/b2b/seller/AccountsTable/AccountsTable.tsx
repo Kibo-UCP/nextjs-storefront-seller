@@ -36,13 +36,12 @@ interface AccountsTableProps {
     pageCount: number
     items: any[]
   }
-  showActionButtons?: boolean
   filters?: B2bContactsFilters
   setB2BContactsSearchParam: (param: QueryQuotesArgs) => void
 }
 
 const AccountsTable = (props: AccountsTableProps) => {
-  const { b2bContacts, showActionButtons = true, filters, setB2BContactsSearchParam } = props
+  const { b2bContacts, filters, setB2BContactsSearchParam } = props
 
   const { publicRuntimeConfig } = getConfig()
 
@@ -85,7 +84,7 @@ const AccountsTable = (props: AccountsTableProps) => {
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
   const handleFilterAction = (filters: B2bContactsFilters) => {
-    setB2BContactsSearchParam({ filter: buildB2bContactFilterParam(filters) })
+    setB2BContactsSearchParam({ filter: buildB2bContactFilterParam(filters), startIndex: 0 })
   }
 
   const handleFilterButtonClick = () => {

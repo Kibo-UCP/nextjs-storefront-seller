@@ -8,7 +8,7 @@ import { getB2BContactsMock } from '@/__mocks__/stories/getB2BContactsMock'
 import { quotesMock } from '@/__mocks__/stories/quotesMock'
 
 export default {
-  title: 'B2B/Quotes/AccountsTable',
+  title: 'B2B/Seller/AccountsTable',
   component: AccountsTable,
   argTypes: {
     setB2BContactsSearchParam: { action: 'setB2BContactsSearchParam' },

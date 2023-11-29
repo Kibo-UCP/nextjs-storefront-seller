@@ -190,7 +190,7 @@ const QuotesTable = (props: QuotesTableProps) => {
   }
 
   const handleFilterAction = (filters: QuoteFilters) => {
-    setQuotesSearchParam({ filter: buildQuotesFilterParam(filters) })
+    setQuotesSearchParam({ filter: buildQuotesFilterParam(filters), startIndex: 0 })
   }
 
   const handleFilterButtonClick = () => {

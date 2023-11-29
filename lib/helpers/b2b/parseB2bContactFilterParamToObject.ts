@@ -27,10 +27,9 @@ export const parseB2bContactFilterParamToObject = (filterParam: string): B2bCont
       filters.email = condition.split('email eq ')[1]
     } else if (condition.includes('accountName eq')) {
       filters.accountName = condition.split('accountName eq ')[1]
-    } else if (condition.split('eq')[0].includes('address')) {
-      filters.address[condition.split('eq')[0].split('.')[1]?.trim() as keyof CrAddress] = condition
-        .split('eq')[1]
-        ?.trim()
+    } else if (condition.split('cont')[0].includes('address')) {
+      filters.address[condition.split('cont')[0].split('.')[1]?.trim() as keyof CrAddress] =
+        condition.split('cont')[1]?.trim()
     } else {
       filters.others = condition
     }
