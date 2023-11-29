@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
-import { getSellerTenantInfo } from '../util/seller'
 import { fetcher } from '@/lib/api/util'
 import { getB2BContactsQuery } from '@/lib/gql/queries'
 
@@ -25,8 +24,7 @@ export default async function getB2bContacts(
         pageSize: 5,
       },
     },
-    { userClaims, headers },
-    getSellerTenantInfo(req)
+    { userClaims, headers }
   )
   return response?.data?.getB2BContacts
 }

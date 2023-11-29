@@ -13,22 +13,16 @@ import {
   TableRow,
   Tooltip,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import { AccountsTableStyles } from './AccountsTable.styles'
 import { KiboPagination, SearchBar } from '@/components/common'
-import { QuotesFilterDialog } from '@/components/dialogs'
-import { useModalContext } from '@/context'
 import { useDebounce } from '@/hooks'
 import { addressGetters } from '@/lib/getters'
-// import { buildQuotesFilterParam } from '@/lib/helpers'
-// import { QuoteFilters,  } from '@/lib/types'
 
-import { QueryQuotesArgs } from '@/lib/gql/types'
+import type { QueryQuotesArgs } from '@/lib/gql/types'
 
 interface AccountsTableProps {
   b2bContacts: {
@@ -84,6 +78,7 @@ const AccountsTable = (props: AccountsTableProps) => {
   const [searchTerm, setSearchTerm] = useState('')
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
+  // TODO: Implement filter
   // const handleFilterAction = (filters: QuoteFilters) => {
   //   setQuotesSearchParam({ filter: buildQuotesFilterParam(filters) })
   // }
@@ -108,6 +103,7 @@ const AccountsTable = (props: AccountsTableProps) => {
     pageSize: b2bContacts?.pageSize,
   }
 
+  // TODO: Implement search
   // useEffect(() => {
   //   handleFilterAction({
   //     ...filters,
@@ -166,40 +162,41 @@ const AccountsTable = (props: AccountsTableProps) => {
                       ...AccountsTableStyles.tableRow,
                       cursor: 'pointer',
                     }}
+                    // TODO: Implement quote details page
                     // onClick={() => router.push(`/my-account/b2b/quote/${quoteId}`)}
                   >
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-number`}>
+                      <Typography variant="body2" data-testid={`accountName`}>
                         {accountName}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row" sx={{ whiteSpace: 'break-spaces' }}>
-                      <Typography variant="body2" data-testid={`quote-name`}>
+                      <Typography variant="body2" data-testid={`email`}>
                         {email}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`address`}>
                         {address}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`city`}>
                         {city}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`state`}>
                         {state}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`country`}>
                         {country}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`zipCode`}>
                         {zipCode}
                       </Typography>
                     </TableCell>
