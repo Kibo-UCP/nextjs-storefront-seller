@@ -28,6 +28,7 @@ import { B2bContactsFilters } from '@/lib/types'
 
 import { QueryQuotesArgs } from '@/lib/gql/types'
 
+
 interface AccountsTableProps {
   b2bContacts: {
     startIndex: number
@@ -119,6 +120,7 @@ const AccountsTable = (props: AccountsTableProps) => {
     })
   }, [debouncedTerm])
 
+
   return (
     <>
       <Box sx={AccountsTableStyles.container}>
@@ -179,32 +181,32 @@ const AccountsTable = (props: AccountsTableProps) => {
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row" sx={{ whiteSpace: 'break-spaces' }}>
-                      <Typography variant="body2" data-testid={`quote-name`}>
+                      <Typography variant="body2" data-testid={`email`}>
                         {email}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`address`}>
                         {address}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`city`}>
                         {city}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`state`}>
                         {state}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`country`}>
                         {country}
                       </Typography>
                     </TableCell>
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`quote-expirationDate`}>
+                      <Typography variant="body2" data-testid={`zipCode`}>
                         {zipCode}
                       </Typography>
                     </TableCell>

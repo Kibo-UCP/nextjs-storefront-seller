@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { QueryQuotesArgs } from '@/lib/gql/types'
+import type { QueryQuotesArgs } from '@/lib/gql/types'
 
 export const useHandleB2BContacts = ({
   salesRepUserId,
