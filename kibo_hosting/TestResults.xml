@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites time="2.467" tests="7" failures="0">
+  <testsuite id="0" name="/src/Mozu.Login.UnitTests/bin/Release/netcoreapp2.2/Mozu.Login.UnitTests.dll" tests="7" failures="0" time="2.467">
+    <testcase classname="Mozu.Login.UnitTests.PostbackUrlValidatorTests" name="ComboTests(Tenant scope validating tenant domain is valid)" time="1.0600000" />
+    <testcase classname="Mozu.Login.UnitTests.PostbackUrlValidatorTests" name="ComboTests(Tenant scope validating mozu domain is valid)" time="0.0020000" />
+    <testcase classname="Mozu.Login.UnitTests.PostbackUrlValidatorTests" name="ComboTests(Tenant scope validating volusion domain is valid)" time="0.0010000" />
+    <testcase classname="Mozu.Login.UnitTests.PostbackUrlValidatorTests" name="ComboTests(Tenant scope validating volusion and subdomain is valid)" time="0.0010000" />
+    <testcase classname="Mozu.Login.UnitTests.PostbackUrlValidatorTests" name="ComboTests(Tenant scope validating real data)" time="0.0010000" />
+    <testcase classname="Mozu.Login.UnitTests.ToControllerTests" name="DoTest(base case)" time="1.4000000" />
+    <testcase classname="Mozu.Login.UnitTests.ToControllerTests" name="DoTest(any volusion postback url can access)" time="0.0020000" />
+  </testsuite>
+</testsuites>
