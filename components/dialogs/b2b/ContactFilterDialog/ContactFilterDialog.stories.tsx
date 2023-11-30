@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import B2bContactsFilterDialog from './B2bContactsFilterDialog'
+import B2bContactsFilterDialog from './ContactFilterDialog'
 
 export default {
   title: 'Dialogs/B2B/B2bContactsFilterDialog',

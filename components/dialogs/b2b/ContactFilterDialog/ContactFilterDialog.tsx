@@ -1,41 +1,27 @@
 import React, { useState } from 'react'
 
-import {
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  Stack,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import dayjs from 'dayjs'
+import { Button, Grid, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboDialog, KiboRadio, KiboTextBox } from '@/components/common'
+import { KiboDialog, KiboTextBox } from '@/components/common'
 import { B2bContactsFilters, QuoteFilters } from '@/lib/types'
 
-interface B2bContactsFilterDialogProps {
+interface ContactsFilterDialogProps {
   filters: B2bContactsFilters
   onFilterAction: (val: QuoteFilters) => void
   closeModal: () => void
 }
 
-interface B2bContactsFilterActionsProps {
+interface ContactsFilterActionsProps {
   onApply: () => void
   onClear: () => void
 }
 
-interface B2bContactsFilterContentProps {
+interface ContactsFilterContentProps {
   filterValues: B2bContactsFilters
   onFilterInput: (value: string, field: string) => void
 }
-const B2bContactsFilterContent = (props: B2bContactsFilterContentProps) => {
+const ContactFilterContent = (props: ContactsFilterContentProps) => {
   const { filterValues, onFilterInput } = props
   const { t } = useTranslation('common')
 
@@ -81,7 +67,7 @@ const B2bContactsFilterContent = (props: B2bContactsFilterContentProps) => {
   )
 }
 
-const B2bContactsFilterActions = (props: B2bContactsFilterActionsProps) => {
+const ContactFilterActions = (props: ContactsFilterActionsProps) => {
   const { onApply, onClear } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -106,7 +92,7 @@ const B2bContactsFilterActions = (props: B2bContactsFilterActionsProps) => {
 }
 
 // Component
-const B2bContactsFilterDialog = (props: B2bContactsFilterDialogProps) => {
+const ContactFilterDialog = (props: ContactsFilterDialogProps) => {
   const { filters, onFilterAction, closeModal } = props
   const { t } = useTranslation('common')
 
@@ -145,12 +131,10 @@ const B2bContactsFilterDialog = (props: B2bContactsFilterDialogProps) => {
 
   const DialogArgs = {
     Title: t('apply-filter'),
-    Content: (
-      <B2bContactsFilterContent filterValues={filterValues} onFilterInput={handleFilterInput} />
-    ),
+    Content: <ContactFilterContent filterValues={filterValues} onFilterInput={handleFilterInput} />,
     showContentTopDivider: true,
     showContentBottomDivider: false,
-    Actions: <B2bContactsFilterActions onApply={handleFilterApply} onClear={handleFilterClear} />,
+    Actions: <ContactFilterActions onApply={handleFilterApply} onClear={handleFilterClear} />,
     isDialogCentered: true,
     customMaxWidth: '32.375rem',
     onClose: () => closeModal(),
@@ -158,4 +142,4 @@ const B2bContactsFilterDialog = (props: B2bContactsFilterDialogProps) => {
 
   return <KiboDialog {...DialogArgs} />
 }
-export default B2bContactsFilterDialog
+export default ContactFilterDialog

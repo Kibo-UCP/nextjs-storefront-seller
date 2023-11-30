@@ -19,15 +19,14 @@ import { useTranslation } from 'next-i18next'
 
 import { AccountsTableStyles } from './AccountsTable.styles'
 import { KiboPagination, SearchBar } from '@/components/common'
-import { B2bContactsFilterDialog } from '@/components/dialogs'
+import { ContactFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDebounce } from '@/hooks'
 import { addressGetters } from '@/lib/getters'
 import { buildB2bContactFilterParam } from '@/lib/helpers'
 import { B2bContactsFilters } from '@/lib/types'
 
-import { QueryQuotesArgs } from '@/lib/gql/types'
-
+import type { QueryQuotesArgs } from '@/lib/gql/types'
 
 interface AccountsTableProps {
   b2bContacts: {
@@ -90,7 +89,7 @@ const AccountsTable = (props: AccountsTableProps) => {
 
   const handleFilterButtonClick = () => {
     showModal({
-      Component: B2bContactsFilterDialog,
+      Component: ContactFilterDialog,
       props: {
         filters: filters,
         onFilterAction: handleFilterAction,
@@ -119,7 +118,6 @@ const AccountsTable = (props: AccountsTableProps) => {
       accountName: debouncedTerm.trim(),
     })
   }, [debouncedTerm])
-
 
   return (
     <>
@@ -160,7 +158,7 @@ const AccountsTable = (props: AccountsTableProps) => {
             </TableRow>
           </TableHead>
           {b2bContacts?.items?.length === 0 ? (
-            <caption>{t('no-quotes-found')}</caption>
+            <caption>{t('no-contacts-found')}</caption>
           ) : (
             <TableBody data-testid="quotes-table-body">
               {b2bContacts?.items?.map((contact) => {

@@ -19,4 +19,4 @@ export { default as QuotesFilterDialog } from './b2b/QuotesFilterDialog/QuotesFi
 export { default as QuoteCommentThreadDialog } from './b2b/QuotesCommentThreadDialog/QuotesCommentThreadDialog'
 export { default as EmailQuoteDialog } from './b2b/EmailQuoteDialog/EmailQuoteDialog'
 export { default as QuotesHistoryDialog } from './b2b/QuotesHistoryDialog/QuotesHistoryDialog'
-export { default as B2bContactsFilterDialog } from './b2b/B2bContactsFilterDialog/B2bContactsFilterDialog'
+export { default as ContactFilterDialog } from './b2b/ContactFilterDialog/ContactFilterDialog'
