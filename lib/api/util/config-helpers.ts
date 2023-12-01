@@ -8,11 +8,11 @@ export const getGraphqlUrl = () => `${addProtocolToHost(process.env.KIBO_API_HOS
 
 export const getApiConfig = () => {
   return {
-    clientId: process.env.KIBO_CLIENT_ID as string,
-    sharedSecret: process.env.KIBO_SHARED_SECRET as string,
-    authHost: process.env.KIBO_APPDEV_HOST as string,
-    apiHost: process.env.KIBO_API_HOST as string,
-    adminUserHost: process.env.KIBO_ADMIN_USER_HOST as string,
+    clientId: (process.env.KIBO_CLIENT_ID || 'client') as string,
+    sharedSecret: (process.env.KIBO_SHARED_SECRET || 'secret') as string,
+    authHost: (process.env.KIBO_APPDEV_HOST || 'home') as string,
+    apiHost: (process.env.KIBO_API_HOST || 'host') as string,
+    adminUserHost: (process.env.KIBO_ADMIN_USER_HOST || 'admin') as string,
   }
 }
 
