@@ -81,7 +81,7 @@ const getB2BContactDetails = (contact: any) => {
     id: contact?.id,
     accountName: contact?.accountName,
     email: contact?.email,
-    address: contact?.address?.address1 + contact.address?.address2,
+    address: contact?.address?.address1,
     city: contact?.address?.cityOrTown,
     state: contact?.address?.stateOrProvince,
     zipCode: contact?.address?.postalOrZipCode,

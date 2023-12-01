@@ -8,7 +8,7 @@ import { QuotesTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { useB2BQuote, useGetQuotes } from '@/hooks'
 import { getCurrentUser, getQuotes } from '@/lib/api/operations'
-import { parseFilterParamToObject } from '@/lib/helpers'
+import { parseQuoteFilterParamToObject } from '@/lib/helpers'
 
 import { QuoteCollection } from '@/lib/gql/types'
 
@@ -72,7 +72,7 @@ const QuotesPage: NextPage<QuotesPageProps> = (props) => {
       <QuotesTemplate
         quoteCollection={quoteCollection as QuoteCollection}
         sortingValues={sortingValues}
-        filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
+        filters={parseQuoteFilterParamToObject(quotesSearchParam.filter as string)}
         setQuotesSearchParam={handleQuotesSearchParam}
       />
     </>

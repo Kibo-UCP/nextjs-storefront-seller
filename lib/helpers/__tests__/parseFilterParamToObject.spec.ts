@@ -1,6 +1,6 @@
-import { parseFilterParamToObject } from '../b2b/parseFilterParamToObject' // Import your function
+import { parseQuoteFilterParamToObject } from '../b2b/parseQuoteFilterParamToObject' // Import your function
 
-describe('parseFilterParamToObject', () => {
+describe('parseQuoteFilterParamToObject', () => {
   it('should parse filterParam correctly', () => {
     const filterParam = 'name cont Sample and number eq 123 and status eq Pending'
     const expectedFilters = {
@@ -11,7 +11,7 @@ describe('parseFilterParamToObject', () => {
       others: '',
     }
 
-    const result = parseFilterParamToObject(filterParam)
+    const result = parseQuoteFilterParamToObject(filterParam)
 
     expect(result).toEqual(expectedFilters)
   })
@@ -26,7 +26,7 @@ describe('parseFilterParamToObject', () => {
       others: '',
     }
 
-    const result = parseFilterParamToObject(filterParam)
+    const result = parseQuoteFilterParamToObject(filterParam)
 
     expect(result).toEqual(expectedFilters)
   })
@@ -41,7 +41,7 @@ describe('parseFilterParamToObject', () => {
       others: 'customerAccountId eq 1002',
     }
 
-    const result = parseFilterParamToObject(filterParam)
+    const result = parseQuoteFilterParamToObject(filterParam)
 
     expect(result).toEqual(expectedFilters)
   })

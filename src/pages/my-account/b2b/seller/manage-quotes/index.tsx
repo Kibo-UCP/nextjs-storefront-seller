@@ -10,7 +10,8 @@ import { MobileB2BLayout } from '@/components/layout'
 import { QuotesTemplate } from '@/components/page-templates'
 import { useB2BQuote, useGetB2BContacts, useGetQuotes, useHandleB2BContacts } from '@/hooks'
 import { getQuotes, getB2BContacts } from '@/lib/api/operations'
-import { decodeParseCookieValue, parseFilterParamToObject } from '@/lib/helpers'
+import { decodeParseCookieValue, parseQuoteFilterParamToObject } from '@/lib/helpers'
+import { parseB2bContactFilterParamToObject } from '@/lib/helpers/b2b/parseB2bContactFilterParamToObject'
 
 import { QuoteCollection } from '@/lib/gql/types'
 
@@ -71,8 +72,14 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   // navigation
   const router = useRouter()
   const { t } = useTranslation('common')
-  const breadcrumbList = [{ key: 'quotes', backText: t('my-account'), redirectURL: '/my-account' }]
-  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'quotes')[0]
+  const breadcrumbList = [
+    {
+      key: 'accountsList',
+      backText: t('accounts-list'),
+      redirectURL: '/my-account' /*TODO: change this to point to admin url*/,
+    },
+  ]
+  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'accountsList')[0]
 
   const onBackClick = () => {
     router.push(activeBreadCrumb.redirectURL)
@@ -86,10 +93,11 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
         onBackClick={onBackClick}
       />
       <Box pb={2}>
-        <Typography variant="h5">Create a quote for an account from the list below</Typography>
+        <Typography variant="h5">{t('create-quote-subtitle-seller')}</Typography>
       </Box>
       <AccountsTable
         b2bContacts={b2bContacts}
+        filters={parseB2bContactFilterParamToObject(b2bContactsSearchParam.filter as string)}
         setB2BContactsSearchParam={handleB2BContactsSearchParam}
       />
       <Box py={2}>
@@ -98,7 +106,7 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
       <QuotesTemplate
         quoteCollection={quoteCollection as QuoteCollection}
         sortingValues={sortingValues}
-        filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
+        filters={parseQuoteFilterParamToObject(quotesSearchParam.filter as string)}
         setQuotesSearchParam={handleQuotesSearchParam}
         showCreateQuoteButton={false}
       />

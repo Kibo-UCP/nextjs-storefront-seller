@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import FilterList from '@mui/icons-material/FilterList'
 import {
@@ -19,8 +19,12 @@ import { useTranslation } from 'next-i18next'
 
 import { AccountsTableStyles } from './AccountsTable.styles'
 import { KiboPagination, SearchBar } from '@/components/common'
+import { ContactFilterDialog } from '@/components/dialogs'
+import { useModalContext } from '@/context'
 import { useDebounce } from '@/hooks'
 import { addressGetters } from '@/lib/getters'
+import { buildB2bContactFilterParam } from '@/lib/helpers'
+import { B2bContactsFilters } from '@/lib/types'
 
 import type { QueryQuotesArgs } from '@/lib/gql/types'
 
@@ -32,15 +36,16 @@ interface AccountsTableProps {
     pageCount: number
     items: any[]
   }
-  showActionButtons?: boolean
-  // filters?: QuoteFilters
+  filters?: B2bContactsFilters
   setB2BContactsSearchParam: (param: QueryQuotesArgs) => void
 }
 
 const AccountsTable = (props: AccountsTableProps) => {
-  const { b2bContacts, showActionButtons = true, setB2BContactsSearchParam } = props
+  const { b2bContacts, filters, setB2BContactsSearchParam } = props
 
   const { publicRuntimeConfig } = getConfig()
+
+  const { showModal } = useModalContext()
 
   const { t } = useTranslation('common')
 
@@ -78,20 +83,19 @@ const AccountsTable = (props: AccountsTableProps) => {
   const [searchTerm, setSearchTerm] = useState('')
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
-  // TODO: Implement filter
-  // const handleFilterAction = (filters: QuoteFilters) => {
-  //   setQuotesSearchParam({ filter: buildQuotesFilterParam(filters) })
-  // }
+  const handleFilterAction = (filters: B2bContactsFilters) => {
+    setB2BContactsSearchParam({ filter: buildB2bContactFilterParam(filters), startIndex: 0 })
+  }
 
-  // const handleFilterButtonClick = () => {
-  //   showModal({
-  //     Component: QuotesFilterDialog,
-  //     props: {
-  //       filters: filters,
-  //       // onFilterAction: handleFilterAction,
-  //     },
-  //   })
-  // }
+  const handleFilterButtonClick = () => {
+    showModal({
+      Component: ContactFilterDialog,
+      props: {
+        filters: filters,
+        onFilterAction: handleFilterAction,
+      },
+    })
+  }
 
   const handleAccountSearch = (term: string) => {
     setSearchTerm(term)
@@ -103,28 +107,33 @@ const AccountsTable = (props: AccountsTableProps) => {
     pageSize: b2bContacts?.pageSize,
   }
 
-  // TODO: Implement search
-  // useEffect(() => {
-  //   handleFilterAction({
-  //     ...filters,
-  //     ...(!parseInt(debouncedTerm) && { name: debouncedTerm.trim(), number: '' }),
-  //     ...(parseInt(debouncedTerm) && { number: debouncedTerm, name: debouncedTerm }),
-  //   })
-  // }, [debouncedTerm])
+  useEffect(() => {
+    handleFilterAction({
+      ...filters,
+      address: {
+        ...filters?.address,
+        address1: debouncedTerm.trim(),
+      },
+      email: debouncedTerm.trim(),
+      accountName: debouncedTerm.trim(),
+    })
+  }, [debouncedTerm])
 
   return (
     <>
       <Box sx={AccountsTableStyles.container}>
         <Box width="100%">
-          <SearchBar searchTerm={searchTerm} onSearch={handleAccountSearch} showClearButton />
+          <SearchBar
+            placeHolder={t('b2b-account-search-placeholder')}
+            searchTerm={searchTerm}
+            onSearch={handleAccountSearch}
+            showClearButton
+          />
         </Box>
         <Box sx={AccountsTableStyles.filterBar}>
           <Box>
             <Tooltip title="Filter list">
-              <IconButton
-                // onClick={handleFilterButtonClick}
-                data-testid="filter-button"
-              >
+              <IconButton onClick={handleFilterButtonClick} data-testid="filter-button">
                 <FilterList />
               </IconButton>
             </Tooltip>
@@ -149,7 +158,7 @@ const AccountsTable = (props: AccountsTableProps) => {
             </TableRow>
           </TableHead>
           {b2bContacts?.items?.length === 0 ? (
-            <caption>{t('no-quotes-found')}</caption>
+            <caption>{t('no-contacts-found')}</caption>
           ) : (
             <TableBody data-testid="quotes-table-body">
               {b2bContacts?.items?.map((contact) => {
@@ -162,11 +171,10 @@ const AccountsTable = (props: AccountsTableProps) => {
                       ...AccountsTableStyles.tableRow,
                       cursor: 'pointer',
                     }}
-                    // TODO: Implement quote details page
                     // onClick={() => router.push(`/my-account/b2b/quote/${quoteId}`)}
                   >
                     <TableCell component="td" scope="row">
-                      <Typography variant="body2" data-testid={`accountName`}>
+                      <Typography variant="body2" data-testid={`quote-number`}>
                         {accountName}
                       </Typography>
                     </TableCell>

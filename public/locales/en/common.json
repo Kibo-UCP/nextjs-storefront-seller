@@ -523,7 +523,11 @@
   "additional-handling": "Additional Handling",
   "handling": "Handling",
   "unit-price": "Unit Price",
+  "b2b-account-search-placeholder": "Search by account name, email address or address",
+  "create-quote-subtitle-seller": "Create a quote for an account from the list below",
+  "accounts-list": "Accounts list",
   "discounts": "Discounts",
   "empty-cart-add-list-to-cart": "Empty Cart and Add List to Cart",
-  "add-list-name-to-search-products": "Add list name to Search/View products in list"
+  "add-list-name-to-search-products": "Add list name to Search/View products in list",
+  "no-contacts-found": "No contacts are added yet"
 }

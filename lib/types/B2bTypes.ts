@@ -1,3 +1,5 @@
+import { CrAddress } from '../gql/types'
+
 export interface SortingValues {
   value: string
   id: string
@@ -15,4 +17,11 @@ export interface QuoteFilters {
   name?: string
   number?: string
   others?: string
+}
+
+export interface B2bContactsFilters {
+  accountName: string
+  email: string
+  others?: string
+  address: CrAddress
 }

@@ -87,6 +87,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
           'aria-invalid': error,
           'aria-label': label || (name as string),
         }}
+        name={name}
         placeholder={placeholder}
         onChange={(e) => onChange && onChange(e.target.name, e.target.value)}
         onBlur={(e) => {
