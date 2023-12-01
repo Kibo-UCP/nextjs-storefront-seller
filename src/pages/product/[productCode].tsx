@@ -1,22 +1,13 @@
-import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductDetailTemplate, ProductDetailSkeleton } from '@/components/page-templates'
-import { getProduct, getCategoryTree, productSearch } from '@/lib/api/operations'
+import { getProduct, getCategoryTree } from '@/lib/api/operations'
 import { productGetters } from '@/lib/getters'
-import { buildProductPath } from '@/lib/helpers'
-import type { CategorySearchParams, MetaData, PageWithMetaData, ProductCustom } from '@/lib/types'
+import type { MetaData, PageWithMetaData, ProductCustom } from '@/lib/types'
 
 import { PrCategory, Product } from '@/lib/gql/types'
-import type {
-  GetStaticPathsResult,
-  GetStaticPropsContext,
-  GetStaticPropsResult,
-  NextPage,
-} from 'next'
-
-const { serverRuntimeConfig } = getConfig()
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from 'next'
 
 interface ProductPageType extends PageWithMetaData {
   categoriesTree?: PrCategory[]
@@ -32,9 +23,9 @@ function getMetaData(product: Product): MetaData {
   }
 }
 
-export async function getStaticProps(
-  context: GetStaticPropsContext
-): Promise<GetStaticPropsResult<any>> {
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<any>> {
   const { locale, params } = context
   const { productCode } = params as any
   const product = await getProduct(productCode)
@@ -49,19 +40,7 @@ export async function getStaticProps(
       metaData: getMetaData(product),
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
-    revalidate: parseInt(serverRuntimeConfig.revalidate),
   }
-}
-
-export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const { serverRuntimeConfig } = getConfig()
-  const { staticPathsMaxSize } = serverRuntimeConfig?.pageConfig?.productDetail || {}
-  const searchResult = await productSearch({
-    pageSize: parseInt(staticPathsMaxSize),
-  } as CategorySearchParams)
-  const items = searchResult?.data?.products?.items || []
-  const paths: string[] = items.map(buildProductPath)
-  return { paths, fallback: true }
 }
 
 const ProductDetailPage: NextPage<ProductPageType> = (props) => {

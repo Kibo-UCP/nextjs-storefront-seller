@@ -1,13 +1,16 @@
+import { Buffer } from 'buffer'
 import { NextResponse, NextRequest } from 'next/server'
 
 const checkIsAuthenticated = (req: NextRequest) => {
   const cookie = req.headers.get('cookie')
   const cookieValue = cookie?.split('kibo_at=')[1]
   const encodedValue = cookieValue?.split(';')[0]
+
   if (encodedValue) {
     const decodedCookie = JSON.parse(Buffer.from(encodedValue, 'base64').toString('utf8'))
     return decodedCookie?.userId
   }
+
   return null
 }
 

@@ -14,7 +14,7 @@ export const useB2BQuote = ({
   const { publicRuntimeConfig } = getConfig()
 
   const [quotesSearchParam, setQuotesSearchParam] = useState<QueryQuotesArgs>({
-    filter: accountId ? `customerAccountId eq ${accountId}` : '',
+    filter: accountId ? `customerAccountId eq customerAccountId eq ${accountId}` : '',
     pageSize: initialData?.pageSize || 5,
     sortBy: 'number desc',
     startIndex: initialData?.startIndex || 0,

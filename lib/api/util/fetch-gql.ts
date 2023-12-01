@@ -13,7 +13,7 @@ const fetcher = async (
   const authToken = await apiAuthClient.getAccessToken()
 
   const isUserSeller = sellerTenantInfo ? true : false
-  const url = isUserSeller ? getProxyGraphqlUrl() : getGraphqlUrl()
+  const url = getGraphqlUrl()
 
   const headers = {
     Authorization: `Bearer ${authToken}`,

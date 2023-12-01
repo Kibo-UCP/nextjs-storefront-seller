@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
+import { getSellerTenantInfo } from '../util/seller'
 import { fetcher } from '@/lib/api/util'
 import { CheckoutUpdateMode } from '@/lib/constants'
 import { getCheckoutQuery as query } from '@/lib/gql/queries'
@@ -23,7 +24,11 @@ export default async function updateOrder(
   const headers = req ? getAdditionalHeader(req) : {}
 
   const userClaims = await getUserClaimsFromRequest(req, res)
-  const response = await fetcher({ query, variables }, { userClaims, headers })
+  const response = await fetcher(
+    { query, variables },
+    { userClaims, headers },
+    getSellerTenantInfo(req)
+  )
 
   return response.data?.checkout
 }
