@@ -15,6 +15,7 @@ import {
   Typography,
 } from '@mui/material'
 import getConfig from 'next/config'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { AccountsTableStyles } from './AccountsTable.styles'
@@ -42,6 +43,8 @@ interface AccountsTableProps {
 
 const AccountsTable = (props: AccountsTableProps) => {
   const { b2bContacts, filters, setB2BContactsSearchParam } = props
+
+  const router = useRouter()
 
   const { publicRuntimeConfig } = getConfig()
 
@@ -171,7 +174,11 @@ const AccountsTable = (props: AccountsTableProps) => {
                       ...AccountsTableStyles.tableRow,
                       cursor: 'pointer',
                     }}
-                    // onClick={() => router.push(`/my-account/b2b/quote/${quoteId}`)}
+                    onClick={() =>
+                      router.push(
+                        `/my-account/b2b/seller/create-quote-from-seller?customerAccountId=${id}`
+                      )
+                    }
                   >
                     <TableCell component="td" scope="row">
                       <Typography variant="body2" data-testid={`quote-number`}>

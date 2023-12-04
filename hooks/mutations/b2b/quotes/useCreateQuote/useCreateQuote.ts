@@ -19,7 +19,6 @@ interface CreateQuoteProps {
 }
 const createQuote = async (props: CreateQuoteProps): Promise<Quote> => {
   const client = makeGraphQLClient()
-  // const { customerAccountId } = props
 
   const variables = buildCreateQuoteParams(props?.customerAccountId)
 

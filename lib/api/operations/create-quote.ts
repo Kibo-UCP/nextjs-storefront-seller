@@ -1,0 +1,29 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+
+import { getAdditionalHeader } from '../util'
+import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
+import { getSellerTenantInfo } from '../util/seller'
+import { fetcher } from '@/lib/api/util'
+import { createQuoteMutation } from '@/lib/gql/mutations'
+import { buildCreateQuoteParams } from '@/lib/helpers'
+
+export default async function createQuote(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  customerAccountId: string
+) {
+  const userClaims = await getUserClaimsFromRequest(req, res)
+
+  const headers = req ? getAdditionalHeader(req) : {}
+
+  const response = await fetcher(
+    {
+      query: createQuoteMutation,
+      variables: buildCreateQuoteParams(parseInt(customerAccountId)),
+    },
+    { userClaims, headers },
+    getSellerTenantInfo(req)
+  )
+
+  return response?.data?.createQuote
+}
