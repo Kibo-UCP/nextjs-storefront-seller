@@ -13,9 +13,9 @@ const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
 const getRefreshToken = (req: NextApiRequest) => {
   const cookies = req.headers.cookie || ''
   const parsedCookies = cookie.parse(cookies)
-
+  const mzrtCookieName = process.env.MZRT_COOKIE_NAME ?? 'mzrt-qa';
   // Access the "mzrt-qa" cookie
-  const mzrtQACookie = parsedCookies['mzrt-qa']
+  const mzrtQACookie = parsedCookies[mzrtCookieName]
 
   if (mzrtQACookie) {
     // Split the "mzrt-qa" cookie into its key-value pairs
