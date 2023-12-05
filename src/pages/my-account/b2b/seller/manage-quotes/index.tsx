@@ -70,7 +70,6 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const { data: quoteCollection } = useGetQuotes(quotesSearchParam, quotes)
 
   // navigation
-  const router = useRouter()
   const { t } = useTranslation('common')
   const breadcrumbList = [
     {
@@ -82,7 +81,7 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'accountsList')[0]
 
   const onBackClick = () => {
-    router.push(activeBreadCrumb.redirectURL)
+    window.parent.postMessage('go-back', '*')
   }
 
   return (

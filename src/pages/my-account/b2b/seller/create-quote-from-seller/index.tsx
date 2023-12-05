@@ -7,7 +7,7 @@ import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res, query } = context
 
-  const { customerAccountId } = query as any
+  const { customerAccountId, isSeller, mode } = query as any
 
   const createQuoteResponse = await createQuote(
     req as NextApiRequest,
@@ -18,7 +18,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (createQuoteResponse?.id) {
     return {
       redirect: {
-        destination: `/my-account/b2b/quote/${createQuoteResponse?.id}`,
+        destination: `/my-account/b2b/quote/${createQuoteResponse?.id}?mode=${mode}&isSeller=${isSeller}`,
         permanent: true,
       },
     }

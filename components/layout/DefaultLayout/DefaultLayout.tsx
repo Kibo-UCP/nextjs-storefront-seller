@@ -48,7 +48,7 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
     }
   }, [])
 
-  const isSeller = router.pathname.includes('/seller/')
+  const isSeller = router.query?.isSeller
 
   return (
     <HydrationBoundary state={pageProps.dehydratedState}>
