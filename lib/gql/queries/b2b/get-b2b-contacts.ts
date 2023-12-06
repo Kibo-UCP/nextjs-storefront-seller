@@ -22,6 +22,7 @@ const getB2BContactsQuery = /* GraphQL */ `
       pageCount
       totalCount
       items {
+        id
         accountName
         email
         address {
