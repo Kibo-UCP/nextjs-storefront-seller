@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { getAdditionalHeader } from '../util'
-import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
-import { getSellerTenantInfo } from '../util/seller'
+import { getAdditionalHeader } from '@/lib/api/util'
 import { fetcher } from '@/lib/api/util'
+import getUserClaimsFromRequest from '@/lib/api/util/getUserClaimsFromRequest'
+import { getSellerTenantInfo } from '@/lib/api/util/seller'
 import { createQuoteMutation } from '@/lib/gql/mutations'
 import { buildCreateQuoteParams } from '@/lib/helpers'
 
