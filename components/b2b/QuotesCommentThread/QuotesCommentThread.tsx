@@ -68,7 +68,6 @@ const QuotesCommentThread = (props: QuotesCommentThreadProps) => {
       )}
 
       {mode &&
-        QuoteStatus[status as string] !== QuoteStatus.InReview &&
         QuoteStatus[status as string] !== QuoteStatus.Completed &&
         QuoteStatus[status as string] !== QuoteStatus.Expired && (
           <Grid item xs={12} md={6} display="flex" alignItems="center" gap={2}>

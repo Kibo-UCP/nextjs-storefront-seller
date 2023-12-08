@@ -5,7 +5,6 @@ import { FiberManualRecord } from '@mui/icons-material'
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import Close from '@mui/icons-material/Close'
 import Done from '@mui/icons-material/Done'
-import { LoadingButton } from '@mui/lab'
 import {
   Stack,
   Typography,
@@ -37,6 +36,7 @@ import {
   QuotesCommentThread,
   QuotesHistory,
 } from '@/components/b2b'
+import { SellerQuoteActions } from '@/components/b2b'
 import { CartItemList } from '@/components/cart'
 import { ShippingMethod } from '@/components/checkout'
 import { AddressCard, AddressForm, KiboRadio, KiboTextBox } from '@/components/common'
@@ -234,7 +234,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
 
   const shippingAddressRef = useRef<HTMLDivElement>(null)
 
-  const isSaveAndExitEnabled = quoteGetters.getSaveAndExitEnabled(
+  const isSubmitForApprovalEnabled = quoteGetters.getSubmitForApprovalEnabled(
     quote?.name as string,
     quote?.fulfillmentInfo,
     shipItems,
@@ -650,8 +650,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   }, [JSON.stringify(quote?.name)])
 
   const isQuoteNameEditable = !Boolean(
-    QuoteStatus[status] === QuoteStatus.InReview ||
-      QuoteStatus[status] === QuoteStatus.Completed ||
+    QuoteStatus[status] === QuoteStatus.Completed ||
       QuoteStatus[status] === QuoteStatus.Expired ||
       !Boolean(quoteNameField.name) ||
       quote?.name === quoteNameInputValue
@@ -684,83 +683,29 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
         <Grid item xs={12}>
           <Stack flexDirection="row" justifyContent="space-between">
             {mdScreen && (
-              <Grid item>
-                <Box>
-                  {mode === 'create' ? (
-                    <Typography variant="h1">{t('create-a-quote')}</Typography>
-                  ) : (
-                    <Typography variant="h1">{quoteName}</Typography>
-                  )}
-                </Box>
-              </Grid>
+              <>
+                <Grid item>
+                  <Box>
+                    {mode === 'create' ? (
+                      <Typography variant="h1">{t('create-a-quote')}</Typography>
+                    ) : (
+                      <Typography variant="h1">{quoteName}</Typography>
+                    )}
+                  </Box>
+                </Grid>
+                <SellerQuoteActions
+                  hasDraft={quote?.hasDraft as boolean}
+                  mode={mode as string}
+                  status={status}
+                  isSubmitForApprovalEnabled={isSubmitForApprovalEnabled}
+                  handleClearChanges={handleClearChanges}
+                  handleEditQuote={() => handleEditQuote(quoteId)}
+                  handleSubmitForApproval={handleSubmitForApproval}
+                  handleGotoCheckout={handleGotoCheckout}
+                  handlePrint={handlePrint}
+                />
+              </>
             )}
-            <Grid item display={'flex'} justifyContent={'flex-end'}>
-              {mdScreen ? (
-                <Stack direction="row" gap={2}>
-                  {(mode === 'create' || mode === 'edit') && (
-                    <LoadingButton
-                      variant="contained"
-                      color="secondary"
-                      disabled={
-                        QuoteStatus[status] === QuoteStatus.InReview ||
-                        QuoteStatus[status] === QuoteStatus.Completed ||
-                        !(quote?.hasDraft as boolean)
-                      }
-                      onClick={handleClearChanges}
-                    >
-                      {t('clear-changes')}
-                    </LoadingButton>
-                  )}
-                  {!mode && (
-                    <LoadingButton
-                      variant="contained"
-                      color="secondary"
-                      disabled={
-                        QuoteStatus[status] === QuoteStatus.InReview ||
-                        QuoteStatus[status] === QuoteStatus.Completed ||
-                        QuoteStatus[status] === QuoteStatus.Expired
-                      }
-                      onClick={() => handleEditQuote(quoteId)}
-                    >
-                      {t('edit-quote')}
-                    </LoadingButton>
-                  )}
-                  <LoadingButton variant="contained" color="secondary" onClick={handlePrint}>
-                    {t('print-quote')}
-                  </LoadingButton>
-                  {(QuoteStatus[quote?.status as string] !== QuoteStatus.ReadyForCheckout ||
-                    mode === 'edit') && (
-                    <LoadingButton
-                      variant="contained"
-                      color="primary"
-                      disabled={
-                        QuoteStatus[status] === QuoteStatus.InReview ||
-                        QuoteStatus[status] === QuoteStatus.Completed ||
-                        QuoteStatus[status] === QuoteStatus.Expired ||
-                        !isSaveAndExitEnabled ||
-                        !quote?.hasDraft
-                      }
-                      onClick={handleSubmitForApproval}
-                    >
-                      {t('submit-for-approval')}
-                    </LoadingButton>
-                  )}
-                  <NoSsr>
-                    {hasPermission(actions.CREATE_CHECKOUT) &&
-                      QuoteStatus[quote?.status as string] === QuoteStatus.ReadyForCheckout && (
-                        <LoadingButton
-                          variant="contained"
-                          color="primary"
-                          disabled={quote?.hasDraft as boolean}
-                          onClick={handleGotoCheckout}
-                        >
-                          {t('continue-to-checkout')}
-                        </LoadingButton>
-                      )}
-                  </NoSsr>
-                </Stack>
-              ) : null}
-            </Grid>
           </Stack>
         </Grid>
         <Grid
@@ -805,7 +750,6 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       onBlur={field.onBlur}
                       required
                       disabled={
-                        QuoteStatus[status] === QuoteStatus.InReview ||
                         QuoteStatus[status] === QuoteStatus.Completed ||
                         QuoteStatus[status] === QuoteStatus.Expired
                       }
@@ -825,7 +769,6 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                     name="item-view"
                     data-testid="save-quote-name"
                     disabled={
-                      QuoteStatus[status] === QuoteStatus.InReview ||
                       QuoteStatus[status] === QuoteStatus.Completed ||
                       QuoteStatus[status] === QuoteStatus.Expired ||
                       !Boolean(quoteNameField.name) ||
@@ -912,11 +855,9 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
           <Typography variant="h2" mb={2}>
             {t('quote-summary')}
           </Typography>
-          {mode &&
-            QuoteStatus[quote?.status as string] !== QuoteStatus.InReview &&
-            QuoteStatus[quote?.status as string] !== QuoteStatus.Completed && (
-              <B2BProductSearch onAddProduct={handleAddProduct} />
-            )}
+          {mode && QuoteStatus[quote?.status as string] !== QuoteStatus.Completed && (
+            <B2BProductSearch onAddProduct={handleAddProduct} />
+          )}
         </Grid>
 
         {/* Product details table section */}
@@ -998,7 +939,6 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                   }
                   {shouldShowAddAddressButton &&
                     mode &&
-                    QuoteStatus[status] !== QuoteStatus.InReview &&
                     QuoteStatus[status] !== QuoteStatus.Completed &&
                     QuoteStatus[status] !== QuoteStatus.Expired && (
                       <Box pb={2}>
@@ -1113,7 +1053,6 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                     )}
                   {!shouldShowAddAddressButton &&
                     mode &&
-                    QuoteStatus[status] !== QuoteStatus.InReview &&
                     QuoteStatus[status] !== QuoteStatus.Completed &&
                     QuoteStatus[status] !== QuoteStatus.Expired && (
                       <>
@@ -1165,9 +1104,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                         </Box>
                       </>
                     )}
-                  {(!mode ||
-                    QuoteStatus[quote?.status as string] === QuoteStatus.InReview ||
-                    QuoteStatus[quote?.status as string] === QuoteStatus.Completed) && (
+                  {(!mode || QuoteStatus[quote?.status as string] === QuoteStatus.Completed) && (
                     <Stack direction="row" justifyContent="space-between">
                       {quote?.fulfillmentInfo?.fulfillmentContact && (
                         <Box pb={1}>
@@ -1296,92 +1233,17 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
             </Box>
 
             {!mdScreen ? (
-              <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
-                <NoSsr>
-                  {hasPermission(actions.CREATE_CHECKOUT) &&
-                    QuoteStatus[quote?.status as string] === QuoteStatus.ReadyForCheckout &&
-                    !quote?.hasDraft && (
-                      <LoadingButton
-                        variant="contained"
-                        color="primary"
-                        disabled={quote?.hasDraft as boolean}
-                        onClick={handleGotoCheckout}
-                        fullWidth
-                      >
-                        {t('continue-to-checkout')}
-                      </LoadingButton>
-                    )}
-                </NoSsr>
-                {(QuoteStatus[quote?.status as string] !== QuoteStatus.ReadyForCheckout ||
-                  quote?.hasDraft) && (
-                  <LoadingButton
-                    variant="contained"
-                    color="primary"
-                    disabled={
-                      QuoteStatus[status] === QuoteStatus.InReview ||
-                      QuoteStatus[status] === QuoteStatus.Completed ||
-                      QuoteStatus[status] === QuoteStatus.Expired ||
-                      !isSaveAndExitEnabled ||
-                      !quote?.hasDraft
-                    }
-                    onClick={handleSubmitForApproval}
-                    fullWidth
-                  >
-                    {t('submit-for-approval')}
-                  </LoadingButton>
-                )}
-                <Box display="flex" gap={3}>
-                  {(mode === 'create' || mode === 'edit') && (
-                    <LoadingButton
-                      variant="contained"
-                      color="secondary"
-                      fullWidth
-                      sx={{ padding: '0.375rem 0.5rem' }}
-                      disabled={
-                        QuoteStatus[status] === QuoteStatus.InReview ||
-                        QuoteStatus[status] === QuoteStatus.Completed ||
-                        QuoteStatus[status] === QuoteStatus.Expired ||
-                        !(quote?.hasDraft as boolean)
-                      }
-                      onClick={handleClearChanges}
-                    >
-                      {t('clear-changes')}
-                    </LoadingButton>
-                  )}
-                  {!mode && (
-                    <LoadingButton
-                      variant="contained"
-                      color="secondary"
-                      disabled={
-                        QuoteStatus[status] === QuoteStatus.InReview ||
-                        QuoteStatus[status] === QuoteStatus.Completed ||
-                        QuoteStatus[status] === QuoteStatus.Expired
-                      }
-                      sx={{ padding: '0.375rem 0.5rem' }}
-                      fullWidth
-                      onClick={() => handleEditQuote(quoteId)}
-                    >
-                      {t('edit-quote')}
-                    </LoadingButton>
-                  )}
-
-                  <LoadingButton
-                    variant="contained"
-                    color="inherit"
-                    fullWidth
-                    disabled={
-                      QuoteStatus[status] === QuoteStatus.InReview ||
-                      QuoteStatus[status] === QuoteStatus.Completed ||
-                      QuoteStatus[status] === QuoteStatus.Expired ||
-                      !Boolean(quoteNameField.name) ||
-                      quote?.name === quoteNameInputValue
-                    }
-                    onClick={handleSubmit(handleSaveQuoteName)}
-                  >
-                    {t('save-quote')}
-                  </LoadingButton>
-                </Box>
-              </Box>
+              <SellerQuoteActions
+                hasDraft={quote?.hasDraft as boolean}
+                mode={mode as string}
+                status={status}
+                isSubmitForApprovalEnabled={isSubmitForApprovalEnabled}
+                handleClearChanges={handleClearChanges}
+                handleEditQuote={() => handleEditQuote(quoteId)}
+                handleSubmitForApproval={handleSubmitForApproval}
+                handleGotoCheckout={handleGotoCheckout}
+                handlePrint={handlePrint}
+              />
             ) : null}
           </Stack>
         </Grid>

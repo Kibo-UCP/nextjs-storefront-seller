@@ -127,8 +127,7 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                 />
               </TableCell>
               <TableCell>
-                {QuoteStatus[status as string] === QuoteStatus.InReview ||
-                QuoteStatus[status as string] === QuoteStatus.Completed ||
+                {QuoteStatus[status as string] === QuoteStatus.Completed ||
                 QuoteStatus[status as string] === QuoteStatus.Expired ||
                 (!mode && isQuote) ? (
                   <Typography>
@@ -146,8 +145,7 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                 )}
               </TableCell>
               <TableCell>
-                {QuoteStatus[status as string] === QuoteStatus.InReview ||
-                QuoteStatus[status as string] === QuoteStatus.Completed ||
+                {QuoteStatus[status as string] === QuoteStatus.Completed ||
                 QuoteStatus[status as string] === QuoteStatus.Expired ||
                 (!mode && isQuote) ? (
                   <Typography>{item.quantity}</Typography>
@@ -203,8 +201,7 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                 />
               </TableCell>
               <TableCell>
-                {QuoteStatus[status as string] !== QuoteStatus.InReview &&
-                  QuoteStatus[status as string] !== QuoteStatus.Completed &&
+                {QuoteStatus[status as string] !== QuoteStatus.Completed &&
                   QuoteStatus[status as string] !== QuoteStatus.Expired &&
                   (mode === 'create' || mode === 'edit' || !isQuote) && (
                     <IconButton

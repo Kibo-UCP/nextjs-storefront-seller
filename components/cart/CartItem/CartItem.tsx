@@ -161,8 +161,7 @@ const CartItem = (props: CartItemProps) => {
                   />
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>
-                  {QuoteStatus[status as string] === QuoteStatus.InReview ||
-                  QuoteStatus[status as string] === QuoteStatus.Completed ||
+                  {QuoteStatus[status as string] === QuoteStatus.Completed ||
                   QuoteStatus[status as string] === QuoteStatus.Expired ||
                   (!mode && isQuote) ? (
                     <Typography>
@@ -194,8 +193,7 @@ const CartItem = (props: CartItemProps) => {
             />
 
             <Box sx={{ ...styles.subContainer }}>
-              {QuoteStatus[status as string] === QuoteStatus.InReview ||
-              QuoteStatus[status as string] === QuoteStatus.Completed ||
+              {QuoteStatus[status as string] === QuoteStatus.Completed ||
               QuoteStatus[status as string] === QuoteStatus.Expired ||
               (!mode && isQuote) ? (
                 <Typography>
@@ -224,8 +222,7 @@ const CartItem = (props: CartItemProps) => {
                 onMenuItemSelection={() => handleActionSelection()}
               />
             </Box> */}
-            {QuoteStatus[status as string] !== QuoteStatus.InReview &&
-              QuoteStatus[status as string] !== QuoteStatus.Completed &&
+            {QuoteStatus[status as string] !== QuoteStatus.Completed &&
               QuoteStatus[status as string] !== QuoteStatus.Expired &&
               (mode === 'create' || mode === 'edit' || !isQuote) && (
                 <IconButton
