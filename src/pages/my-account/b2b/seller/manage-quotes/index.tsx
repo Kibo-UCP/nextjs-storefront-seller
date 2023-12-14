@@ -51,7 +51,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const { quotes, b2bContactsCollection, salesRepUserId } = props
-
+  const router = useRouter()
   // B2B Contacts API implementation
 
   const { b2bContactsSearchParam, handleB2BContactsSearchParam } = useHandleB2BContacts({
@@ -70,7 +70,6 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const { data: quoteCollection } = useGetQuotes(quotesSearchParam, quotes)
 
   // navigation
-  const router = useRouter()
   const { t } = useTranslation('common')
   const breadcrumbList = [
     {
@@ -82,7 +81,11 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'accountsList')[0]
 
   const onBackClick = () => {
-    router.push(activeBreadCrumb.redirectURL)
+    if (router.query?.isSeller) {
+      window.parent.postMessage('go-back', '*')
+    } else {
+      router.push(activeBreadCrumb.redirectURL)
+    }
   }
 
   return (

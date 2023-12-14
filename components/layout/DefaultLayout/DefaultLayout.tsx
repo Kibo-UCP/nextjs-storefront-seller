@@ -27,8 +27,6 @@ creditCardType.updateCard('american-express', {
 })
 
 const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: ReactElement }) => {
-  const router = useRouter()
-
   useEffect(() => {
     const handleRouteChange = (url: any) => {
       const isMyAccountPage = url.includes('/my-account')
@@ -48,8 +46,6 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
     }
   }, [])
 
-  const isSeller = router.pathname.includes('/seller/')
-
   return (
     <HydrationBoundary state={pageProps.dehydratedState}>
       <ThemeProvider theme={theme}>
@@ -59,28 +55,11 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
             <HeaderContextProvider>
               <GlobalFetchingIndicator />
               <Stack>
-                {!isSeller && (
-                  <KiboHeader
-                    navLinks={[
-                      {
-                        link: '/order-status',
-                        text: 'order-status',
-                      },
-                      {
-                        link: '/wishlist',
-                        text: 'wishlist',
-                      },
-                    ]}
-                    categoriesTree={pageProps.categoriesTree || []}
-                    isSticky={true}
-                  />
-                )}
                 <DialogRoot />
                 <SnackbarRoot />
                 <Container maxWidth={'xl'} sx={{ py: 2, flex: '1 0 auto' }}>
                   {children}
                 </Container>
-                {!isSeller && <Footer content={pageProps.footer} />}
               </Stack>
             </HeaderContextProvider>
           </AuthContextProvider>
