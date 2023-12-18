@@ -3,13 +3,15 @@ import { MutationUpdateQuoteArgs } from '../gql/types'
 export const buildUpdateQuoteParams = (
   quoteId: string,
   updateMode: string,
-  name: string
+  name?: string,
+  expirationDate?: string
 ): MutationUpdateQuoteArgs => {
   return {
     quoteId,
     updateMode,
     quoteInput: {
-      name,
+      ...(name && { name }),
+      ...(expirationDate && { expirationDate }),
       siteId: 0,
       tenantId: 0,
       subTotal: 0,

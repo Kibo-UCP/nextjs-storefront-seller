@@ -15,14 +15,25 @@ const fetcher = async (
   const isUserSeller = sellerTenantInfo ? true : false
   const url = getGraphqlUrl()
 
+  // remove t from siteId if t is included
+  const tenantId = sellerTenantInfo?.tenant.startsWith('t')
+    ? sellerTenantInfo?.tenant.slice(1)
+    : sellerTenantInfo?.tenant
+
+  // remove s from siteId if s is included
+  const siteId = sellerTenantInfo?.site.startsWith('s')
+    ? sellerTenantInfo?.site.slice(1)
+    : sellerTenantInfo?.site
+
   const headers = {
     Authorization: `Bearer ${authToken}`,
     'Content-Type': 'application/json',
     ...(isUserSeller
       ? {
           'x-vol-app-claims': options?.userClaims,
-          'x-vol-tenant': sellerTenantInfo?.tenant,
-          'x-vol-site': sellerTenantInfo?.site,
+          'x-vol-user-claims': options?.userClaims,
+          'x-vol-tenant': tenantId,
+          'x-vol-site': siteId,
         }
       : {
           'x-vol-user-claims': options?.userClaims,

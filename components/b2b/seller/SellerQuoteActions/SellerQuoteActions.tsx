@@ -11,7 +11,7 @@ interface SellerQuoteActionsProps {
   isSubmitForApprovalEnabled: boolean
   handleClearChanges: () => void
   handleEditQuote: () => void
-  handleSubmitForApproval: () => void
+  handleSubmitForApproval: (isApproving?: boolean) => void
   handleGotoCheckout: () => void
   handlePrint: () => void
 }
@@ -23,7 +23,6 @@ export default function SellerQuoteActions({
   handleClearChanges,
   handleEditQuote,
   handleSubmitForApproval,
-  handleGotoCheckout,
   handlePrint,
 }: SellerQuoteActionsProps) {
   const { t } = useTranslation()
@@ -42,47 +41,47 @@ export default function SellerQuoteActions({
           gap={2}
           width={'100%'}
         >
-          <Box display={'flex'} gap={2} whiteSpace={'nowrap'}>
-            {(mode === 'create' || mode === 'edit') && (
+          {
+            <Box display={'flex'} gap={2} whiteSpace={'nowrap'}>
+              {(QuoteStatus[status] === QuoteStatus.Pending ||
+                QuoteStatus[status] === QuoteStatus.InReview) &&
+                (mode === 'create' || mode === 'edit') && (
+                  <LoadingButton
+                    variant="contained"
+                    color="secondary"
+                    sx={{ width: { xs: '50%', md: '100%' } }}
+                    disabled={!hasDraft}
+                    onClick={handleClearChanges}
+                  >
+                    {t('clear-changes')}
+                  </LoadingButton>
+                )}
+              {!mode && (
+                <LoadingButton
+                  variant="contained"
+                  color="secondary"
+                  sx={{ width: { xs: '50%', md: '100%' } }}
+                  disabled={
+                    // add sales-rep check
+                    QuoteStatus[status] === QuoteStatus.Completed ||
+                    QuoteStatus[status] === QuoteStatus.Expired ||
+                    QuoteStatus[status] === QuoteStatus.ReadyForCheckout
+                  }
+                  onClick={handleEditQuote}
+                >
+                  {t('edit-quote')}
+                </LoadingButton>
+              )}
               <LoadingButton
+                sx={{ width: { xs: '50%', md: '100%' } }}
                 variant="contained"
                 color="secondary"
-                sx={{ width: { xs: '50%', md: '100%' } }}
-                disabled={
-                  QuoteStatus[status] === QuoteStatus.InReview ||
-                  QuoteStatus[status] === QuoteStatus.Completed ||
-                  !(hasDraft as boolean)
-                }
-                onClick={handleClearChanges}
+                onClick={handlePrint}
               >
-                {t('clear-changes')}
+                {t('print-quote')}
               </LoadingButton>
-            )}
-            {!mode && (
-              <LoadingButton
-                variant="contained"
-                color="secondary"
-                sx={{ width: { xs: '50%', md: '100%' } }}
-                disabled={
-                  // add sales-rep check
-                  QuoteStatus[status] === QuoteStatus.Completed ||
-                  QuoteStatus[status] === QuoteStatus.Expired ||
-                  QuoteStatus[status] === QuoteStatus.ReadyForCheckout
-                }
-                onClick={handleEditQuote}
-              >
-                {t('edit-quote')}
-              </LoadingButton>
-            )}
-            <LoadingButton
-              sx={{ width: { xs: '50%', md: '100%' } }}
-              variant="contained"
-              color="secondary"
-              onClick={handlePrint}
-            >
-              {t('print-quote')}
-            </LoadingButton>
-          </Box>
+            </Box>
+          }
           {QuoteStatus[status as string] === QuoteStatus.Pending && mode === 'edit' && (
             <Box>
               <LoadingButton
@@ -90,45 +89,46 @@ export default function SellerQuoteActions({
                 color="primary"
                 fullWidth
                 disabled={!isSubmitForApprovalEnabled || !hasDraft}
-                onClick={handleSubmitForApproval}
+                onClick={() => handleSubmitForApproval(false)}
               >
                 {t('submit-for-approval')}
               </LoadingButton>
             </Box>
           )}
-          <NoSsr>
-            {(QuoteStatus[status as string] === QuoteStatus.InReview ||
-              (mode === 'edit' && hasDraft)) && (
-              <Box>
-                <LoadingButton
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  disabled={hasDraft as boolean}
-                  onClick={handleGotoCheckout}
-                >
-                  {t('approve-quote')}
-                </LoadingButton>
-              </Box>
-            )}
-          </NoSsr>
-          <NoSsr>
-            {QuoteStatus[status as string] === QuoteStatus.InReview &&
-              mode === 'edit' &&
-              hasDraft && (
-                <Box>
-                  <LoadingButton
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    disabled={hasDraft as boolean}
-                    onClick={handleGotoCheckout}
-                  >
-                    {t('approve-quote-with-changes')}
-                  </LoadingButton>
-                </Box>
-              )}
-          </NoSsr>
+          {QuoteStatus[status as string] === QuoteStatus.InReview && (
+            <>
+              <NoSsr>
+                {!hasDraft && (
+                  <Box>
+                    <LoadingButton
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      // disabled={hasDraft as boolean}
+                      onClick={() => handleSubmitForApproval(true)}
+                    >
+                      {t('approve-quote')}
+                    </LoadingButton>
+                  </Box>
+                )}
+              </NoSsr>
+              <NoSsr>
+                {mode === 'edit' && hasDraft && (
+                  <Box>
+                    <LoadingButton
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      // disabled={!hasDraft as boolean}
+                      onClick={() => handleSubmitForApproval(true)}
+                    >
+                      {t('approve-quote-with-changes')}
+                    </LoadingButton>
+                  </Box>
+                )}
+              </NoSsr>
+            </>
+          )}
         </Stack>
       }
     </Grid>

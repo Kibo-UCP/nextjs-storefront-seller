@@ -19,7 +19,12 @@ import {
   Link,
   Divider,
   NoSsr,
+  TextField,
+  IconButton,
 } from '@mui/material'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from 'dayjs'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -174,6 +179,10 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const router = useRouter()
   const [quoteNameInputValue, setQuoteNameInputValue] = useState<string>(
     quote?.name ? quote.name : ''
+  )
+
+  const [quoteExpirationInputValue, setQuoteExpirationInputValue] = useState<string>(
+    quote?.expirationDate
   )
   const { data: purchaseLocation } = useGetPurchaseLocation()
 
@@ -348,7 +357,20 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     }
   }
 
-  const handleSubmitForApproval = async () => {
+  const handleSaveQuoteExpiration = async (value: any) => {
+    try {
+      const response = await updateQuote.mutateAsync({
+        quoteId,
+        expirationDate: value,
+        updateMode,
+      })
+      if (response) showSnackbar(t('quote-saved-success-message'), 'success')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleSubmitForApproval = async (isApproving = false) => {
     try {
       showModal({
         Component: ConfirmationDialog,
@@ -361,9 +383,11 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
             })
             router.push('/my-account/b2b/quotes')
           },
-          title: t('submit-quote-title'),
-          contentText: t('submit-quote-confirmation'),
-          primaryButtonText: t('submit-quote'),
+          title: isApproving ? t('approve-quote-title') : t('submit-quote-title'),
+          contentText: isApproving
+            ? t('approve-quote-confirmation')
+            : t('submit-quote-confirmation'),
+          primaryButtonText: isApproving ? t('approve-quote') : t('submit-quote'),
           showContentTopDivider: true,
           showContentBottomDivider: true,
         },
@@ -614,7 +638,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     }
   }
   const handleUpdateQuoteFulfillmentInfo = async () => {
-    if (shouldFetchShippingMethods) {
+    if (shouldFetchShippingMethods && mode) {
       const shippingMethodName = getQuoteShippingMethodName(
         shippingMethods,
         selectedShippingMethodCode
@@ -798,7 +822,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
         <Grid
           item
           xs={12}
-          md={10}
+          md={11}
           sx={{
             ...quoteDetailsTemplateStyles.quoteDetails,
             ...quoteDetailsTemplateStyles.gridPaddingTop,
@@ -842,7 +866,30 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               <InputLabel shrink={true} sx={{ position: 'relative' }}>
                 {t('expiration-date')}
               </InputLabel>
-              <Typography>{expirationDate}</Typography>
+              {mode !== 'edit' && <Typography>{expirationDate}</Typography>}
+              {mode === 'edit' && (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    openTo="day"
+                    views={['year', 'month', 'day']}
+                    inputFormat="DD-MM-YYYY"
+                    disablePast
+                    minDate={dayjs().add(1, 'day')}
+                    value={quote?.expirationDate}
+                    onChange={(newValue) => {
+                      handleSaveQuoteExpiration(dayjs(newValue))
+                    }}
+                    renderInput={(params) => (
+                      <Box display={'flex'}>
+                        <TextField {...params} size="small" />
+                        <IconButton onClick={() => handleSaveQuoteExpiration(null)}>
+                          <Close />
+                        </IconButton>
+                      </Box>
+                    )}
+                  />
+                </LocalizationProvider>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -1027,16 +1074,16 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                             </>
                           )}
                           <NoSsr>
-                            {hasPermission(actions.CREATE_CONTACTS) && (
-                              <Button
-                                variant="contained"
-                                color="inherit"
-                                sx={{ width: { xs: '100%', sm: '50%' } }}
-                                onClick={handleAddNewAddress}
-                              >
-                                {t('add-new-address')}
-                              </Button>
-                            )}
+                            {/* {hasPermission(actions.CREATE_CONTACTS) && ( */}
+                            <Button
+                              variant="contained"
+                              color="inherit"
+                              sx={{ width: { xs: '100%', sm: '50%' } }}
+                              onClick={handleAddNewAddress}
+                            >
+                              {t('add-new-address')}
+                            </Button>
+                            {/* )} */}
                           </NoSsr>
                         </Stack>
                         {shippingMethods.length > 0 && Boolean(selectedShippingAddressId) && (
