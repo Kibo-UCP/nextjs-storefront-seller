@@ -47,8 +47,10 @@ const QuotePage: NextPage<QuotePageProps> = (props) => {
   const draft = true
   const router = useRouter()
   const { data: quoteResult } = useGetQuoteByID({ quoteId, draft, initialQuote })
+
   const handleGoToQuotes = () => {
     if (router.query?.isSeller) {
+      console.log('router.query?.isSeller', router.query)
       window.parent.postMessage('go-back', '*')
     } else {
       router.push('/my-account/b2b/quotes')

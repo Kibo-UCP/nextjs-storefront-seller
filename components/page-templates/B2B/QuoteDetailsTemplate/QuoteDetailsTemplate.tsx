@@ -21,6 +21,7 @@ import {
   NoSsr,
   TextField,
   IconButton,
+  CircularProgress,
 } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -181,9 +182,6 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     quote?.name ? quote.name : ''
   )
 
-  const [quoteExpirationInputValue, setQuoteExpirationInputValue] = useState<string>(
-    quote?.expirationDate
-  )
   const { data: purchaseLocation } = useGetPurchaseLocation()
 
   const { createCustomerAddress } = useCreateCustomerAddress()
@@ -350,7 +348,12 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const handleSaveQuoteName = async (formData: any) => {
     const { name } = formData
     try {
-      const response = await updateQuote.mutateAsync({ quoteId, name, updateMode })
+      const response = await updateQuote.mutateAsync({
+        quoteId,
+        name,
+        expirationDate: quote.expirationDate,
+        updateMode,
+      })
       if (response) showSnackbar(t('quote-saved-success-message'), 'success')
     } catch (error) {
       console.error(error)
@@ -361,6 +364,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     try {
       const response = await updateQuote.mutateAsync({
         quoteId,
+        name: quoteNameInputValue,
         expirationDate: value,
         updateMode,
       })
@@ -774,6 +778,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       onBlur={field.onBlur}
                       required
                       disabled={
+                        updateQuote.isPending ||
                         QuoteStatus[status] === QuoteStatus.Completed ||
                         QuoteStatus[status] === QuoteStatus.Expired
                       }
@@ -870,6 +875,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               {mode === 'edit' && (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
+                    disabled={updateQuote.isPending}
                     openTo="day"
                     views={['year', 'month', 'day']}
                     inputFormat="DD-MM-YYYY"
@@ -883,7 +889,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       <Box display={'flex'}>
                         <TextField {...params} size="small" />
                         <IconButton onClick={() => handleSaveQuoteExpiration(null)}>
-                          <Close />
+                          {updateQuote.isPending ? <CircularProgress size={20} /> : <Close />}
                         </IconButton>
                       </Box>
                     )}
