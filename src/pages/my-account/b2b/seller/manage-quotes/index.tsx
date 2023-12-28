@@ -42,7 +42,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       quotes,
-      b2bContactsCollection: b2bContactsResponse,
+      b2bContactsCollection: b2bContactsResponse || null,
       salesRepUserId,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },

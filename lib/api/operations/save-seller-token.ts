@@ -76,7 +76,6 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   const { query } = parse(req.url as string, true)
   const { tenant, site } = query
   const refreshToken = getRefreshToken(req)
-  console.log('refreshToken', refreshToken)
 
   // Get authToken
   const authToken = await apiAuthClient.getAccessToken()
