@@ -39,7 +39,6 @@ interface FilterInputProps {
 
 const FilterTypes = {
   EXPIRATION_DATE: 'expirationDate',
-  CREATE_DATE: 'createDate',
   STATUS: 'status',
 }
 
@@ -111,13 +110,6 @@ const QuotesFilterContent = (props: QuotesFilterContentProps) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <FilterInput
-            label={t('date-created')}
-            value={filterValues[FilterTypes.CREATE_DATE]}
-            handleDateChange={(value) => onFilterInput(value, FilterTypes.CREATE_DATE)}
-          />
-        </Grid>
-        <Grid item xs={12}>
           <KiboRadio
             name="quote-status"
             title={<InputLabel shrink>{t('status')}</InputLabel>}
@@ -180,7 +172,6 @@ const QuotesFilterDialog = (props: QuotesFilterDialogProps) => {
     setFilterValues({
       ...filterValues,
       expirationDate: '',
-      createDate: '',
       status: '',
     })
     onFilterAction(filterValues)

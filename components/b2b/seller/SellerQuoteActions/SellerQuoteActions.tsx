@@ -82,19 +82,20 @@ export default function SellerQuoteActions({
               </LoadingButton>
             </Box>
           }
-          {QuoteStatus[status as string] === QuoteStatus.Pending && mode === 'edit' && (
-            <Box>
-              <LoadingButton
-                variant="contained"
-                color="primary"
-                fullWidth
-                disabled={!isSubmitForApprovalEnabled || !hasDraft}
-                onClick={() => handleSubmitForApproval(false)}
-              >
-                {t('submit-for-approval')}
-              </LoadingButton>
-            </Box>
-          )}
+          {QuoteStatus[status as string] === QuoteStatus.Pending &&
+            (mode === 'edit' || mode === 'create') && (
+              <Box>
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  disabled={!isSubmitForApprovalEnabled || !hasDraft}
+                  onClick={() => handleSubmitForApproval(false)}
+                >
+                  {t('submit-for-approval')}
+                </LoadingButton>
+              </Box>
+            )}
           {QuoteStatus[status as string] === QuoteStatus.InReview && (
             <>
               <NoSsr>

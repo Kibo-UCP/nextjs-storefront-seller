@@ -384,6 +384,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               quoteId,
               updateMode: QuoteUpdateMode.ApplyAndCommit,
               name: quote?.name as string,
+              expirationDate: quote?.expirationDate,
             })
             router.push('/my-account/b2b/quotes')
           },
@@ -871,8 +872,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               <InputLabel shrink={true} sx={{ position: 'relative' }}>
                 {t('expiration-date')}
               </InputLabel>
-              {mode !== 'edit' && <Typography>{expirationDate}</Typography>}
-              {mode === 'edit' && (
+              {mode !== 'edit' && mode !== 'create' && <Typography>{expirationDate}</Typography>}
+              {(mode === 'edit' || mode === 'create') && (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     disabled={updateQuote.isPending}

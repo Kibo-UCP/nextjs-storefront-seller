@@ -104,7 +104,7 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
         setB2BContactsSearchParam={handleB2BContactsSearchParam}
       />
       <Box py={2}>
-        <Typography variant="h2">All Quotes</Typography>
+        <Typography variant="h2">{t('all-quotes')}</Typography>
       </Box>
       <QuotesTemplate
         quoteCollection={quoteCollection as QuoteCollection}
