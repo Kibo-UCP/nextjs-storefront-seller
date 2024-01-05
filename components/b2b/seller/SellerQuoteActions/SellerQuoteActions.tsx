@@ -105,7 +105,6 @@ export default function SellerQuoteActions({
                       variant="contained"
                       color="primary"
                       fullWidth
-                      // disabled={hasDraft as boolean}
                       onClick={() => handleSubmitForApproval(true)}
                     >
                       {t('approve-quote')}

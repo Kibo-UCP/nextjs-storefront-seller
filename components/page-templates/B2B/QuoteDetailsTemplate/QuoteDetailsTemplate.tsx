@@ -386,7 +386,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               name: quote?.name as string,
               expirationDate: quote?.expirationDate,
             })
-            router.push('/my-account/b2b/quotes')
+            onAccountTitleClick()
           },
           title: isApproving ? t('approve-quote-title') : t('submit-quote-title'),
           contentText: isApproving

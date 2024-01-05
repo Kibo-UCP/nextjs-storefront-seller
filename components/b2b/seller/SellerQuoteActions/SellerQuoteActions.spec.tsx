@@ -56,59 +56,6 @@ afterEach(() => {
 })
 
 describe('[components] - SellerQuoteActions', () => {
-  // it('should disable clear changes button if quote is InReview/Completed status and quote is not in draft mode', () => {
-  //   isDisabledClearChangesButton(InReview)
-
-  //   cleanup()
-
-  //   isDisabledClearChangesButton(Completed)
-  // })
-
-  // it('should not render clear changes button if quote is in view mode', () => {
-  //   render(<InReview {...mockProps} mode="" />)
-  //   const clearChangesButton = screen.queryByText('clear-changes')
-
-  //   expect(clearChangesButton).not.toBeInTheDocument()
-  // })
-
-  // it('should disable edit quote button if quote is ReadyForCheckout/Completed/Expired status', () => {
-  //   isDisabledEditQuoteButton(ReadyForCheckout)
-  //   cleanup()
-  //   isDisabledEditQuoteButton(Completed)
-  //   cleanup()
-  //   isDisabledEditQuoteButton(Expired)
-  // })
-
-  // it('should not render edit quote button if quote is in create/edit mode', () => {
-  //   isHiddenEditQuoteButton(ReadyForCheckout, 'create')
-  //   cleanup()
-
-  //   isHiddenEditQuoteButton(ReadyForCheckout, 'edit')
-  //   cleanup()
-
-  //   isHiddenEditQuoteButton(Completed, 'create')
-  //   cleanup()
-
-  //   isHiddenEditQuoteButton(Completed, 'edit')
-  //   cleanup()
-
-  //   isHiddenEditQuoteButton(Expired, 'create')
-  //   cleanup()
-
-  //   isHiddenEditQuoteButton(Expired, 'edit')
-  // })
-
-  // it('should disable submit-for-approval button if not in draft mode & all required values are present', () => {
-  //   isDisabledSubmitForApprovalButton(Pending)
-  //   cleanup()
-  // })
-
-  // it('should show approve-quote button if in InReview state', () => {
-  //   render(<InReview {...mockProps} />)
-  //   const approveQuoteButton = screen.getByText('approve-quote')
-
-  //   expect(approveQuoteButton).toBeVisible()
-  // })
   describe('Pending status', () => {
     it('should test Pending status in readonly mode', () => {
       render(<Pending {...mockProps} mode={''} />)

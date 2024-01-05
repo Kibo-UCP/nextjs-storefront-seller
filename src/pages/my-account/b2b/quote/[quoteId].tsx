@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuoteDetailsTemplate } from '@/components/page-templates'
@@ -45,16 +44,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 const QuotePage: NextPage<QuotePageProps> = (props) => {
   const { quoteId, quote: initialQuote, mode, currentB2BUser, b2bUsers } = props
   const draft = true
-  const router = useRouter()
   const { data: quoteResult } = useGetQuoteByID({ quoteId, draft, initialQuote })
 
   const handleGoToQuotes = () => {
-    if (router.query?.isSeller) {
-      console.log('router.query?.isSeller', router.query)
-      window.parent.postMessage('go-back', '*')
-    } else {
-      router.push('/my-account/b2b/quotes')
-    }
+    window.parent.postMessage('go-back', '*')
   }
 
   return (
