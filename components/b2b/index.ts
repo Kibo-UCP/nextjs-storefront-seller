@@ -24,3 +24,4 @@ export { default as ProductViewDialog } from '@/components/b2b/Lists/ProductView
 export { default as ViewLists } from '@/components/b2b/Lists/ViewLists/ViewLists'
 
 export { default as AccountsTable } from '@/components/b2b/seller/AccountsTable/AccountsTable'
+export { default as SellerQuoteActions } from '@/components/b2b/seller/SellerQuoteActions/SellerQuoteActions'

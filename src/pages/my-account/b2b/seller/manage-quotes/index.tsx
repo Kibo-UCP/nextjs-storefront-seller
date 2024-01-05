@@ -42,7 +42,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       quotes,
-      b2bContactsCollection: b2bContactsResponse,
+      b2bContactsCollection: b2bContactsResponse || null,
       salesRepUserId,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
@@ -104,7 +104,7 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
         setB2BContactsSearchParam={handleB2BContactsSearchParam}
       />
       <Box py={2}>
-        <Typography variant="h2">All Quotes</Typography>
+        <Typography variant="h2">{t('all-quotes')}</Typography>
       </Box>
       <QuotesTemplate
         quoteCollection={quoteCollection as QuoteCollection}

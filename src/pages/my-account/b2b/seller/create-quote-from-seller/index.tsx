@@ -7,7 +7,7 @@ import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res, query } = context
 
-  const { customerAccountId, mode } = query as any
+  const { customerAccountId, mode = 'create' } = query as any
 
   const createQuoteResponse = await createQuote(
     req as NextApiRequest,

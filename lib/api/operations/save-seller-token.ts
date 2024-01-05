@@ -10,12 +10,22 @@ import { prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
 const { publicRuntimeConfig } = getConfig()
 const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
 
+const getCookieName = () => {
+  const mzrtCookieName = process.env.MZRT_COOKIE_NAME ?? 'mzrt-qa'
+  const isDev = mzrtCookieName.includes('dev')
+  if (isDev) {
+    const keyValuePairs = mzrtCookieName.split('-')
+    return mzrtCookieName + '-' + keyValuePairs[keyValuePairs.length - 1]
+  }
+  return mzrtCookieName
+}
+
 const getRefreshToken = (req: NextApiRequest) => {
   const cookies = req.headers.cookie || ''
   const parsedCookies = cookie.parse(cookies)
 
   // Access the "mzrt-qa" cookie
-  const mzrtCookieName = process.env.MZRT_COOKIE_NAME ?? 'mzrt-qa'
+  const mzrtCookieName = getCookieName()
   const mzrtQACookie = parsedCookies[mzrtCookieName]
 
   if (mzrtQACookie) {

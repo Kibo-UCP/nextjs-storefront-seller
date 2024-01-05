@@ -110,7 +110,6 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         disableGutters
         secondaryAction={
           mode &&
-          QuoteStatus[status as string] !== QuoteStatus.InReview &&
           QuoteStatus[status as string] !== QuoteStatus.Completed &&
           QuoteStatus[status as string] !== QuoteStatus.Expired && (
             <Box display="flex" gap={2}>

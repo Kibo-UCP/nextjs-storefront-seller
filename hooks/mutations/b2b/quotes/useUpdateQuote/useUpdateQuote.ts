@@ -17,13 +17,14 @@ import { Quote } from '@/lib/gql/types'
 interface UpdateQuoteProps {
   quoteId: string
   updateMode: string
-  name: string
+  name?: string
+  expirationDate?: string
 }
 const updateQuote = async (props: UpdateQuoteProps): Promise<Quote> => {
   const client = makeGraphQLClient()
-  const { quoteId, updateMode, name } = props
+  const { quoteId, updateMode, name, expirationDate } = props
 
-  const variables = buildUpdateQuoteParams(quoteId, updateMode, name)
+  const variables = buildUpdateQuoteParams(quoteId, updateMode, name, expirationDate)
 
   const response = await client.request({
     document: updateQuoteMutation,

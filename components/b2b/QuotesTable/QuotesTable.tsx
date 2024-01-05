@@ -342,7 +342,6 @@ const QuotesTable = (props: QuotesTableProps) => {
                                 disabled={
                                   !(
                                     QuoteStatus[status] === QuoteStatus.ReadyForCheckout ||
-                                    QuoteStatus[status] === QuoteStatus.InReview ||
                                     QuoteStatus[status] === QuoteStatus.Expired
                                   )
                                 }
@@ -398,8 +397,7 @@ const QuotesTable = (props: QuotesTableProps) => {
           <MenuItem onClick={(e) => handleEditQuote(e, anchorEl?.quote?.id as string)}>
             <Typography variant="body2">{t('edit-quote')}</Typography>
           </MenuItem>
-          {(QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.InReview ||
-            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.ReadyForCheckout ||
+          {(QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.ReadyForCheckout ||
             QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.Expired) && (
             <MenuItem onClick={(e) => handleEmailQuote(e, anchorEl?.quote?.id as string)}>
               <Typography variant="body2">{t('email-quote')}</Typography>
