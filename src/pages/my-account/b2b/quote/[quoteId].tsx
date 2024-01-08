@@ -1,3 +1,4 @@
+import ErrorPage from 'next/error'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuoteDetailsTemplate } from '@/components/page-templates'
@@ -55,6 +56,9 @@ const QuotePage: NextPage<QuotePageProps> = (props) => {
 
   const handleGoToQuotes = () => {
     window.parent.postMessage('go-back', '*')
+  }
+  if (!initialQuote) {
+    return <ErrorPage statusCode={404} />
   }
 
   return (
