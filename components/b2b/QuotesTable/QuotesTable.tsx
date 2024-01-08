@@ -290,7 +290,7 @@ const QuotesTable = (props: QuotesTableProps) => {
                       borderLeftColor: getStatusColorCode(status),
                       cursor: 'pointer',
                     }}
-                    onClick={() => router.push(`/my-account/b2b/quote/${quoteId}`)}
+                    onClick={() => router.push(`/my-account/b2b/quote/${quoteId}?manageQuote=true`)}
                   >
                     <TableCell component="td" scope="row">
                       <Typography variant="body2" data-testid={`quote-number`}>

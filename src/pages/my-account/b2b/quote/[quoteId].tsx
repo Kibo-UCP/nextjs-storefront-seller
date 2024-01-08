@@ -1,4 +1,5 @@
 import ErrorPage from 'next/error'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuoteDetailsTemplate } from '@/components/page-templates'
@@ -15,11 +16,12 @@ interface QuotePageProps {
   currentB2BUser: any
   b2bUsers: any
   b2bAccount: any
+  manageQuote: boolean
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res, query } = context
-  const { quoteId, mode = '' } = query as any
+  const { quoteId, mode = '', manageQuote = false } = query as any
   const draft = true
   const quote = await getQuote(quoteId, draft, req as NextApiRequest, res as NextApiResponse)
   const b2bUsers = (await getB2BUsers(req as NextApiRequest, res as NextApiResponse)) ?? null
@@ -44,18 +46,32 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       b2bUsers,
       currentB2BUser,
       b2bAccount,
+      manageQuote,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
 const QuotePage: NextPage<QuotePageProps> = (props) => {
-  const { quoteId, quote: initialQuote, mode, currentB2BUser, b2bUsers, b2bAccount } = props
+  const {
+    quoteId,
+    quote: initialQuote,
+    mode,
+    currentB2BUser,
+    b2bUsers,
+    b2bAccount,
+    manageQuote,
+  } = props
+  const router = useRouter()
   const draft = true
   const { data: quoteResult } = useGetQuoteByID({ quoteId, draft, initialQuote })
 
   const handleGoToQuotes = () => {
-    window.parent.postMessage('go-back', '*')
+    if (manageQuote) {
+      router.push('/my-account/b2b/seller/manage-quotes')
+    } else {
+      window.parent.postMessage('go-back', '*')
+    }
   }
   if (!initialQuote) {
     return <ErrorPage statusCode={404} />

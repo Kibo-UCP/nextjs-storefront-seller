@@ -18,7 +18,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (createQuoteResponse?.id) {
     return {
       redirect: {
-        destination: `/my-account/b2b/quote/${createQuoteResponse?.id}?mode=${mode}`,
+        destination: `/my-account/b2b/quote/${createQuoteResponse?.id}?mode=${mode}&manageQuote=true`,
         permanent: true,
       },
     }
