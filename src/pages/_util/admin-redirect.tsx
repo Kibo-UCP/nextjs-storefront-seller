@@ -14,6 +14,10 @@ export async function getServerSideProps(context: any) {
   const currentPath = context.req.url
   const destination = currentPath.replace(/\/_util\/.*/, `/${redirect}`)
 
+  console.log('context.req: ', context.req)
+  console.log('currentPath: ', currentPath)
+  console.log('destination: ', destination)
+
   return {
     redirect: {
       destination: destination + (isSeller ? '&isSeller=' + isSeller : ''),
