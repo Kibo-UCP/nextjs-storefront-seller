@@ -29,7 +29,7 @@ import saveSellerToken from '@/lib/api/operations/save-seller-token'
 const AdminRedirect = () => {
   return (
     <div>
-      <h1>Redirecting...</h1>
+      <h1>_util Redirecting...</h1>
     </div>
   )
 }
