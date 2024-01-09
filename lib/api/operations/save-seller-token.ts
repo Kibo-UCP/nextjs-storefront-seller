@@ -10,6 +10,10 @@ import { prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
 const { publicRuntimeConfig } = getConfig()
 const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
 
+interface TimeoutRequestInit extends RequestInit {
+  timeout?: number
+}
+
 const getCookieName = () => {
   const mzrtCookieName = process.env.MZRT_COOKIE_NAME ?? 'mzrt-qa'
   const isDev = mzrtCookieName.includes('dev')
@@ -75,7 +79,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get tenant, site, redirect and refreshToken from request
   const { query } = parse(req.url as string, true)
   const { tenant, site } = query
-  const refreshToken = getRefreshToken(req)
+  const refreshToken = '7eb4d4173ff544aeb98965a966cde69d' //getRefreshToken(req)
 
   // Get authToken
   const authToken = await apiAuthClient.getAccessToken()
@@ -88,16 +92,22 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   headers.set('Authorization', `Bearer ${authToken}`)
   headers.set('Content-Type', 'application/json')
 
-  // Fetch user-claims
-  const jsonResponse = await fetch(url, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify({
-      refreshToken,
-    }),
-  })
+  let response: any = null
+  try {
+    // Fetch user-claims
+    const jsonResponse = await fetch(url, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        refreshToken,
+      }),
+      timeout: 10000,
+    } as TimeoutRequestInit)
 
-  const response = await jsonResponse.json()
+    response = await jsonResponse.json()
+  } catch (err) {
+    console.log('--- err: --- ', err)
+  }
 
   // Set cookie
   const token = {
