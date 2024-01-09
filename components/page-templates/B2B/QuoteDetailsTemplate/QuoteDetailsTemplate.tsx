@@ -108,6 +108,7 @@ export interface QuoteDetailsTemplateProps {
   mode?: string
   currentB2BUser: any
   initialB2BUsers: any
+  b2bAccount: any
   onAccountTitleClick: () => void
 }
 
@@ -116,7 +117,7 @@ const schema = yup.object().shape({
 })
 
 const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
-  const { quote, mode, initialB2BUsers, currentB2BUser, onAccountTitleClick } = props
+  const { quote, mode, initialB2BUsers, b2bAccount, onAccountTitleClick } = props
   const { publicRuntimeConfig } = getConfig()
   const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
 
@@ -144,16 +145,17 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const { user, isAuthenticated } = useAuthContext()
   const [promoError, setPromoError] = useState<string>('')
 
-  const accountName = user?.companyOrOrganization ?? '-'
+  const accountName = b2bAccount?.companyOrOrganization ?? '-'
   const { number, quoteId, status, createdDate, expirationDate } =
     quoteGetters.getQuoteDetails(quote)
   const quoteItems = (quote?.items as CrOrderItem[]) ?? []
 
   const userIdToEmail = useGetB2BUsersEmailAndId(initialB2BUsers)
+  const quoteCreatedBy = b2bAccount?.users?.filter((user: any) => user.userId === quote?.userId)
 
   const createdBy = quoteGetters.getQuoteCreatedBy(
-    currentB2BUser?.items?.[0]?.firstName as string,
-    currentB2BUser?.items?.[0]?.lastName as string
+    quoteCreatedBy?.[0]?.firstName as string,
+    quoteCreatedBy?.[0]?.lastName as string
   )
 
   const quoteName = quote?.name ?? ''
