@@ -5,7 +5,7 @@ import { parse } from 'url'
 import saveSellerToken from '@/lib/api/operations/save-seller-token'
 
 export async function getServerSideProps(context: any) {
-  // await saveSellerToken(context.req, context.res)
+  await saveSellerToken(context.req, context.res)
 
   const { query } = parse(context.req.url as string, true)
   const { redirect, isSeller } = query
