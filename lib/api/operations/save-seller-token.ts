@@ -95,7 +95,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let response: any = null
 
-  logger.info(
+  logger.error(
     {
       tenant,
       site,
@@ -118,7 +118,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     } as TimeoutRequestInit)
 
     response = await jsonResponse.json()
-    logger.info({ response }, 'pino: response')
+    logger.error({ response }, 'pino: response')
   } catch (err) {
     console.log('--- err: --- ', err)
     logger.error(err, 'pino: err')
@@ -136,7 +136,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     site,
   }
 
-  logger.info({ token }, 'pino: token')
+  logger.error({ token }, 'pino: token')
   res.setHeader(
     'Set-Cookie',
     authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
