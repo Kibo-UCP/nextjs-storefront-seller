@@ -185,7 +185,7 @@ const AccountsTable = (props: AccountsTableProps) => {
                     }}
                     onClick={() =>
                       router.push(
-                        `/my-account/b2b/seller/create-quote-from-seller?customerAccountId=${accountId}`
+                        `/my-account/b2b/seller/create-quote-from-seller?customerAccountId=${accountId}&manageQuote=true`
                       )
                     }
                   >

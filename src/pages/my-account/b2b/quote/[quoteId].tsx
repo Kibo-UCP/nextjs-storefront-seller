@@ -21,7 +21,7 @@ interface QuotePageProps {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res, query } = context
-  const { quoteId, mode = '', manageQuote = false } = query as any
+  const { quoteId, mode = '', manageQuote = 'false' } = query as any
   const draft = true
   const quote = await getQuote(quoteId, draft, req as NextApiRequest, res as NextApiResponse)
   const b2bUsers = (await getB2BUsers(req as NextApiRequest, res as NextApiResponse)) ?? null
@@ -46,7 +46,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       b2bUsers,
       currentB2BUser,
       b2bAccount,
-      manageQuote,
+      manageQuote: manageQuote?.toLowerCase() === 'true',
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
