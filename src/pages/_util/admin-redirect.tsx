@@ -35,7 +35,7 @@ const AdminRedirect = (props: { currentPath: any; url: string; details: any }) =
     <div>
       <h2>currentPath: {props.currentPath}</h2>
       <h2>url: {props.url}</h2>
-      <h2>details: {JSON.stringify(props.details)}</h2>
+      <h2>details:: {JSON.stringify(props.details)}</h2>
     </div>
   )
 }
