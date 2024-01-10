@@ -18,9 +18,14 @@ export async function getServerSideProps(context: any) {
   console.log('destination: ', destination)
 
   return {
-    redirect: {
-      destination: destination + (isSeller ? '&isSeller=' + isSeller : ''),
-      permanent: false,
+    // redirect: {
+    //   destination: destination + (isSeller ? '&isSeller=' + isSeller : ''),
+    //   permanent: false,
+    // },
+
+    props: {
+      currentPath,
+      url: destination + (isSeller ? '&isSeller=' + isSeller : ''),
     },
   }
 }
