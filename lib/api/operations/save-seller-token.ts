@@ -95,13 +95,16 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let response: any = null
 
-  logger.info('pino: fetch', {
-    tenant,
-    site,
-    url,
-    headers,
-    refreshToken,
-  })
+  logger.info(
+    {
+      tenant,
+      site,
+      url,
+      headers,
+      refreshToken,
+    },
+    'pino: fetch'
+  )
 
   try {
     // Fetch user-claims
@@ -118,7 +121,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     logger.info('pino: response', response)
   } catch (err) {
     console.log('--- err: --- ', err)
-    logger.error('pino: err', err)
+    logger.error(err, 'pino: err')
   }
 
   // Set cookie
@@ -133,7 +136,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     site,
   }
 
-  logger.info('pino: token', token)
+  logger.info(token, 'pino: token')
   res.setHeader(
     'Set-Cookie',
     authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
