@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
 import getConfig from 'next/config'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -51,7 +50,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const { quotes, b2bContactsCollection, salesRepUserId } = props
-  const router = useRouter()
   // B2B Contacts API implementation
 
   const { b2bContactsSearchParam, handleB2BContactsSearchParam } = useHandleB2BContacts({
@@ -81,11 +79,7 @@ const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'accountsList')[0]
 
   const onBackClick = () => {
-    if (router.query?.isSeller) {
-      window.parent.postMessage('go-back', '*')
-    } else {
-      router.push(activeBreadCrumb.redirectURL)
-    }
+    window.parent.postMessage('go-back', '*')
   }
 
   return (

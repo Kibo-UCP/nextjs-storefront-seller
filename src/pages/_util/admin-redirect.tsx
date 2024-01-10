@@ -8,7 +8,7 @@ export async function getServerSideProps(context: any) {
   await saveSellerToken(context.req, context.res)
 
   const { query } = parse(context.req.url as string, true)
-  const { redirect, isSeller } = query
+  const { redirect } = query
 
   // Remove "_util" from the current URL and append the redirect path
   const currentPath = context.req.url
@@ -16,7 +16,7 @@ export async function getServerSideProps(context: any) {
 
   return {
     redirect: {
-      destination: destination + (isSeller ? '&isSeller=' + isSeller : ''),
+      destination,
       permanent: false,
     },
   }

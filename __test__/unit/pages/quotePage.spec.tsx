@@ -111,6 +111,7 @@ describe('[page] Quote Page', () => {
       currentB2BUser: customerB2BUserForPage0Mock,
       b2bUsers: customerB2BUserForPage0Mock,
       b2bAccount: b2BAccountResponseMock,
+      manageQuote: false,
     }
     render(
       <RQNotificationContextProvider>

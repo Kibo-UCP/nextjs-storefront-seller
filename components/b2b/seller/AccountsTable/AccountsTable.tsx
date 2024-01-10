@@ -165,8 +165,17 @@ const AccountsTable = (props: AccountsTableProps) => {
           ) : (
             <TableBody data-testid="quotes-table-body">
               {b2bContacts?.items?.map((contact) => {
-                const { id, accountName, email, address, city, country, state, zipCode } =
-                  addressGetters.getB2BContactDetails(contact)
+                const {
+                  id,
+                  accountId,
+                  accountName,
+                  email,
+                  address,
+                  city,
+                  country,
+                  state,
+                  zipCode,
+                } = addressGetters.getB2BContactDetails(contact)
                 return (
                   <TableRow
                     key={id}
@@ -176,7 +185,7 @@ const AccountsTable = (props: AccountsTableProps) => {
                     }}
                     onClick={() =>
                       router.push(
-                        `/my-account/b2b/seller/create-quote-from-seller?customerAccountId=${id}`
+                        `/my-account/b2b/seller/create-quote-from-seller?customerAccountId=${accountId}&manageQuote=true`
                       )
                     }
                   >
