@@ -19,17 +19,14 @@ export async function getServerSideProps(context: any) {
   console.log('currentPath: ', currentPath)
   console.log('destination: ', destination)
 
-  const clientId = getApiConfig().clientId
-  const sharedSecret = getApiConfig().sharedSecret
-  const authHost = getApiConfig().authHost
-  const apiHost = getApiConfig().apiHost
-  const adminUserHost = getApiConfig().adminUserHost
   const env = {
-    clientId,
-    sharedSecret,
-    authHost,
-    apiHost,
-    adminUserHost,
+    KIBO_APPDEV_HOST: process.env.KIBO_APPDEV_HOST || '',
+    KIBO_ADMIN_USER_HOST: process.env.KIBO_ADMIN_USER_HOST || '',
+    KIBO_API_HOST: process.env.KIBO_API_HOST || '',
+    KIBO_CLIENT_ID: process.env.KIBO_CLIENT_ID || '',
+    KIBO_SHARED_SECRET: process.env.KIBO_SHARED_SECRET || '',
+    KIBO_PCI_HOST: process.env.KIBO_PCI_HOST || '',
+    MZRT_COOKIE_NAME: process.env.MZRT_COOKIE_NAME || '',
   }
 
   return {
@@ -52,7 +49,7 @@ const AdminRedirect = (props: { currentPath: any; url: string; details: any; env
       <h2>currentPath: {props.currentPath}</h2>
       <h2>url: {props.url}</h2>
       <h2>details:: {JSON.stringify(props.details)}</h2>
-      <h2>env:: {JSON.stringify(props.env)}</h2>
+      <h2>env: {JSON.stringify(props.env)}</h2>
     </div>
   )
 }
