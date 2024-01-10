@@ -101,7 +101,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
       body: JSON.stringify({
         refreshToken,
       }),
-      timeout: 20000,
+      timeout: 10000,
     } as TimeoutRequestInit)
 
     response = await jsonResponse.json()

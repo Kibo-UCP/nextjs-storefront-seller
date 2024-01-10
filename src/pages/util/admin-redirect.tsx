@@ -14,7 +14,6 @@ export async function getServerSideProps(context: any) {
   const currentPath = context.req.url
   const destination = currentPath.replace(/\/_util\/.*/, `/${redirect}`)
 
-  console.log('context.req: ', context.req)
   console.log('currentPath: ', currentPath)
   console.log('destination: ', destination)
 
@@ -23,16 +22,12 @@ export async function getServerSideProps(context: any) {
       destination: destination + (isSeller ? '&isSeller=' + isSeller : ''),
       permanent: false,
     },
-    // props: {   
-    //   currentPath: currentPath,
-    //   url: destination + (isSeller ? '&isSeller=' + isSeller : ''),
-    // },
   }
 }
 
-const AdminRedirect = (props: {  currentPath: any; url: string }) => {
+const AdminRedirect = (props: { currentPath: any; url: string }) => {
   return (
-    <div>    
+    <div>
       <h2>currentPath: {props.currentPath}</h2>
       <h2>url: {props.url}</h2>
     </div>
