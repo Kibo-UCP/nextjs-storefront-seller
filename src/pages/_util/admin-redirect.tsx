@@ -5,7 +5,7 @@ import { parse } from 'url'
 import saveSellerToken from '@/lib/api/operations/save-seller-token'
 
 export async function getServerSideProps(context: any) {
-  // await saveSellerToken(context.req, context.res)
+  const details = await saveSellerToken(context.req, context.res)
 
   const { query } = parse(context.req.url as string, true)
   const { redirect, isSeller } = query
@@ -18,18 +18,24 @@ export async function getServerSideProps(context: any) {
   console.log('destination: ', destination)
 
   return {
-    redirect: {
-      destination: destination + (isSeller ? '&isSeller=' + isSeller : ''),
-      permanent: false,
+    // redirect: {
+    //   destination: destination + (isSeller ? '&isSeller=' + isSeller : ''),
+    //   permanent: false,
+    // },
+    props: {
+      currentPath,
+      destination,
+      details,
     },
   }
 }
 
-const AdminRedirect = (props: { currentPath: any; url: string }) => {
+const AdminRedirect = (props: { currentPath: any; url: string; details: any }) => {
   return (
     <div>
       <h2>currentPath: {props.currentPath}</h2>
       <h2>url: {props.url}</h2>
+      <h2>details: {JSON.stringify(props.details)}</h2>
     </div>
   )
 }

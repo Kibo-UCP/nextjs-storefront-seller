@@ -93,7 +93,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   headers.set('Authorization', `Bearer ${authToken}`)
   headers.set('Content-Type', 'application/json')
 
-  let response: any = null
+  const response: any = null
 
   logger.error(
     {
@@ -106,41 +106,50 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     'pino: fetch'
   )
 
-  try {
-    // Fetch user-claims
-    const jsonResponse = await fetch(url, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify({
-        refreshToken,
-      }),
-      timeout: 10000,
-    } as TimeoutRequestInit)
+  // try {
+  //   // Fetch user-claims
+  //   const jsonResponse = await fetch(url, {
+  //     method: 'PUT',
+  //     headers,
+  //     body: JSON.stringify({
+  //       refreshToken,
+  //     }),
+  //     timeout: 10000,
+  //   } as TimeoutRequestInit)
 
-    response = await jsonResponse.json()
-    logger.error({ response }, 'pino: response')
-  } catch (err) {
-    console.log('--- err: --- ', err)
-    logger.error(err, 'pino: err')
+  //   response = await jsonResponse.json()
+  //   logger.error({ response }, 'pino: response')
+  // } catch (err) {
+  //   console.log('--- err: --- ', err)
+  //   logger.error(err, 'pino: err')
+  // }
+
+  // // Set cookie
+  // const token = {
+  //   userId: response?.user?.userId,
+  //   userName: response?.user?.userName,
+  //   accessToken: response?.accessToken,
+  //   accessTokenExpiration: response?.accessTokenExpiration,
+  //   refreshToken: response?.refreshToken,
+  //   refreshTokenExpiration: response?.refreshTokenExpiration,
+  //   tenant,
+  //   site,
+  // }
+
+  // logger.error({ token }, 'pino: token')
+  // res.setHeader(
+  //   'Set-Cookie',
+  //   authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
+  // )
+
+  return {
+    url,
+    headers: {
+      'x-vol-tenant': tenant as string,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({ refreshToken }),
   }
-
-  // Set cookie
-  const token = {
-    userId: response?.user?.userId,
-    userName: response?.user?.userName,
-    accessToken: response?.accessToken,
-    accessTokenExpiration: response?.accessTokenExpiration,
-    refreshToken: response?.refreshToken,
-    refreshTokenExpiration: response?.refreshTokenExpiration,
-    tenant,
-    site,
-  }
-
-  logger.error({ token }, 'pino: token')
-  res.setHeader(
-    'Set-Cookie',
-    authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
-  )
 }
 
 export default saveSellerToken
