@@ -6,6 +6,7 @@ import { parse } from 'url'
 import { apiAuthClient } from '../util/api-auth-client'
 import { getApiConfig } from '../util/config-helpers'
 import { prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
+import logger from 'next-logger.config'
 
 const { publicRuntimeConfig } = getConfig()
 const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
@@ -93,6 +94,15 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   headers.set('Content-Type', 'application/json')
 
   let response: any = null
+
+  logger.info('pino: fetch', {
+    tenant,
+    site,
+    url,
+    headers,
+    refreshToken,
+  })
+
   try {
     // Fetch user-claims
     const jsonResponse = await fetch(url, {
@@ -105,8 +115,10 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     } as TimeoutRequestInit)
 
     response = await jsonResponse.json()
+    logger.info('pino: response', response)
   } catch (err) {
     console.log('--- err: --- ', err)
+    logger.error('pino: err', err)
   }
 
   // Set cookie
@@ -121,6 +133,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     site,
   }
 
+  logger.info('pino: token', token)
   res.setHeader(
     'Set-Cookie',
     authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
