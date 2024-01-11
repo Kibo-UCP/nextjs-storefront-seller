@@ -83,7 +83,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   const refreshToken = getRefreshToken(req)
 
   // Get authToken
-  const authToken = await apiAuthClient.getAccessToken()
+  const authToken = (await apiAuthClient.getAccessToken()) || ''
 
   // Construct url and headers
   const url = getAdminUserHost(tenant as string)
