@@ -6,8 +6,7 @@ import saveSellerToken from '@/lib/api/operations/save-seller-token'
 import { getApiConfig } from '@/lib/api/util/config-helpers'
 
 export async function getServerSideProps(context: any) {
-  let details
-  //  details = await saveSellerToken(context.req, context.res)
+  const details = await saveSellerToken(context.req, context.res)
 
   const { query } = parse(context.req.url as string, true)
   const { redirect, isSeller } = query

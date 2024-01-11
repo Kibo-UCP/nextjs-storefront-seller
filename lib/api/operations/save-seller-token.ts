@@ -80,7 +80,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get tenant, site, redirect and refreshToken from request
   const { query } = parse(req.url as string, true)
   const { tenant, site } = query
-  const refreshToken = '7eb4d4173ff544aeb98965a966cde69d' // getRefreshToken(req)
+  const refreshToken = getRefreshToken(req)
 
   // Get authToken
   const authToken = await apiAuthClient.getAccessToken()
@@ -93,7 +93,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   headers.set('Authorization', `Bearer ${authToken}`)
   headers.set('Content-Type', 'application/json')
 
-  const response: any = null
+  let response: any = null
 
   logger.error(
     {
@@ -106,49 +106,45 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     'pino: fetch'
   )
 
-  // try {
-  //   // Fetch user-claims
-  //   const jsonResponse = await fetch(url, {
-  //     method: 'PUT',
-  //     headers,
-  //     body: JSON.stringify({
-  //       refreshToken,
-  //     }),
-  //     timeout: 10000,
-  //   } as TimeoutRequestInit)
+  try {
+    // Fetch user-claims
+    const jsonResponse = await fetch(url, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        refreshToken,
+      }),
+      timeout: 10000,
+    } as TimeoutRequestInit)
 
-  //   response = await jsonResponse.json()
-  //   logger.error({ response }, 'pino: response')
-  // } catch (err) {
-  //   console.log('--- err: --- ', err)
-  //   logger.error(err, 'pino: err')
-  // }
+    response = await jsonResponse.json()
+    logger.error({ response }, 'pino: response')
+  } catch (err) {
+    console.log('--- err: --- ', err)
+    logger.error(err, 'pino: err')
+  }
 
-  // // Set cookie
-  // const token = {
-  //   userId: response?.user?.userId,
-  //   userName: response?.user?.userName,
-  //   accessToken: response?.accessToken,
-  //   accessTokenExpiration: response?.accessTokenExpiration,
-  //   refreshToken: response?.refreshToken,
-  //   refreshTokenExpiration: response?.refreshTokenExpiration,
-  //   tenant,
-  //   site,
-  // }
+  // Set cookie
+  const token = {
+    userId: response?.user?.userId,
+    userName: response?.user?.userName,
+    accessToken: response?.accessToken,
+    accessTokenExpiration: response?.accessTokenExpiration,
+    refreshToken: response?.refreshToken,
+    refreshTokenExpiration: response?.refreshTokenExpiration,
+    tenant,
+    site,
+  }
 
-  // logger.error({ token }, 'pino: token')
-  // res.setHeader(
-  //   'Set-Cookie',
-  //   authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
-  // )
+  logger.error({ token }, 'pino: token')
+  res.setHeader(
+    'Set-Cookie',
+    authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
+  )
 
   return {
     url,
-    headers: {
-      'x-vol-tenant': tenant as string,
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify({ refreshToken }),
+    token,
   }
 }
 
