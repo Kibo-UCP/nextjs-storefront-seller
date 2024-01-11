@@ -216,7 +216,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const shouldFetchShippingMethods =
     quoteId && draft && shipItems?.length && selectedShippingAddressId
   const { updateQuoteFulfillmentInfo } = useUpdateQuoteFulfillmentInfo({
-    shouldFetchShippingMethods: !!shouldFetchShippingMethods,
+    shouldFetchShippingMethods: Boolean(shouldFetchShippingMethods),
   })
   const { openProductQuickViewModal, handleAddToQuote } = useProductCardActions(
     !!shouldFetchShippingMethods
@@ -758,7 +758,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
           <>
             <Grid
               item
-              xs={isQuoteNameEditable ? 10 : 12}
+              xs={isQuoteNameEditable ? 7 : 12}
+              sm={9}
               md={5}
               style={{ paddingTop: !mdScreen ? '1rem' : '24px' }}
             >
@@ -792,11 +793,11 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
             </Grid>
 
             {isQuoteNameEditable && (
-              <Grid item xs={2} md={5} display={'flex'} alignItems={'center'}>
-                <Box display={'flex'} gap={1} pt={1}>
+              <Grid item xs={5} sm={3} md={5} display={'flex'} alignItems={'center'}>
+                <Box sx={{ pt: { xs: 0, md: 1 }, gap: 1, display: 'flex' }}>
                   <Button
                     variant="contained"
-                    sx={{ p: 0.5 }}
+                    sx={{ p: 0.2 }}
                     aria-label="item-view"
                     name="item-view"
                     data-testid="save-quote-name"
@@ -813,7 +814,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                   <Button
                     variant="contained"
                     color="secondary"
-                    sx={{ p: 0.5 }}
+                    sx={{ p: 0.2 }}
                     aria-label="item-view"
                     name="item-view"
                     data-testid="cancel-quote-name"
