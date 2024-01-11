@@ -144,6 +144,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return {
     url,
+    authToken,
     token,
   }
 }
