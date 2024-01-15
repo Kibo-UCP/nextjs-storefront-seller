@@ -97,6 +97,16 @@ const QuotesFilterContent = (props: QuotesFilterContentProps) => {
       value: 'ReadyForCheckout',
       name: 'readyForCheckout',
     },
+    {
+      label: <Typography variant="body2">{t('completed')}</Typography>,
+      value: 'Completed',
+      name: 'Completed',
+    },
+    {
+      label: <Typography variant="body2">{t('expired')}</Typography>,
+      value: 'Expired',
+      name: 'Expired',
+    },
   ]
 
   return (

@@ -206,7 +206,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         <ListItemText primary={<Typography variant="body2">{t('duty-total')}</Typography>} />
       </ListItem>
 
-      {QuoteStatus[status as string] !== QuoteStatus.InReview &&
+      {QuoteStatus[status as string] !== QuoteStatus.ReadyForCheckout &&
         QuoteStatus[status as string] !== QuoteStatus.Completed &&
         QuoteStatus[status as string] !== QuoteStatus.Expired && (
           <PromoCodeBadge
