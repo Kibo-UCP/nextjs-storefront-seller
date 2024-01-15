@@ -75,7 +75,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get tenant, site, redirect and refreshToken from request
   const { query } = parse(req.url as string, true)
   const { tenant, site } = query
-  const refreshToken = getRefreshToken(req)
+  const refreshToken = '5f72de35c42045f39621d9df6e79f524' // getRefreshToken(req)
 
   // Get authToken
   const authToken = await apiAuthClient.getAccessToken()
@@ -115,6 +115,13 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
     'Set-Cookie',
     authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
   )
+
+  return {
+    bearerToken: authToken,
+    accessToken: response?.accessToken,
+    tenant,
+    site,
+  }
 }
 
 export default saveSellerToken
