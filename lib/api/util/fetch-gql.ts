@@ -30,8 +30,8 @@ const fetcher = async (
     'Content-Type': 'application/json',
     ...(isUserSeller
       ? {
-          // 'x-vol-app-claims': options?.userClaims,
-          // 'x-vol-user-claims': options?.userClaims,
+          'x-vol-app-claims': options?.userClaims,
+          'x-vol-user-claims': options?.userClaims,
           'x-vol-tenant': tenantId,
           'x-vol-site': siteId,
         }
@@ -40,8 +40,6 @@ const fetcher = async (
         }),
     ...options.headers,
   }
-
-  console.log('--------headers----------', headers)
 
   const response = await fetch(url, {
     method: 'POST',
