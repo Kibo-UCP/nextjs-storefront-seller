@@ -13,25 +13,25 @@ export async function getServerSideProps(context: any) {
 
   // Remove "_util" from the current URL and append the redirect path
   const currentPath = context.req.url
-  const destination = currentPath.replace(/\/_util\/.*/, `/${redirect}`)
+  const destination = currentPath.replace(/\/util\/.*/, `/${redirect}`)
 
   return {
-    redirect: {
-      destination,
-      permanent: false,
-    },
-    // props: {
-    //   details: {
-    //     ...details,
-    //     KIBO_APPDEV_HOST: process.env.KIBO_APPDEV_HOST,
-    //     KIBO_ADMIN_USER_HOST: process.env.KIBO_ADMIN_USER_HOST,
-    //     KIBO_API_HOST: process.env.KIBO_API_HOST,
-    //     KIBO_CLIENT_ID: process.env.KIBO_CLIENT_ID,
-    //     KIBO_PCI_HOST: process.env.KIBO_PCI_HOST,
-    //     MZRT_COOKIE_NAME: process.env.MZRT_COOKIE_NAME,
-    //   },
+    // redirect: {
     //   destination,
+    //   permanent: false,
     // },
+    props: {
+      details: {
+        ...details,
+        KIBO_APPDEV_HOST: process.env.KIBO_APPDEV_HOST,
+        KIBO_ADMIN_USER_HOST: process.env.KIBO_ADMIN_USER_HOST,
+        KIBO_API_HOST: process.env.KIBO_API_HOST,
+        KIBO_CLIENT_ID: process.env.KIBO_CLIENT_ID,
+        KIBO_PCI_HOST: process.env.KIBO_PCI_HOST,
+        MZRT_COOKIE_NAME: process.env.MZRT_COOKIE_NAME,
+      },
+      destination,
+    },
   }
 }
 
