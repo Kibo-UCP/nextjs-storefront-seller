@@ -12,7 +12,7 @@ const fetcher = async (
 ) => {
   const authToken = await apiAuthClient.getAccessToken()
 
-  const isUserSeller = sellerTenantInfo ? true : false
+  const isUserSeller = true
   const url = getGraphqlUrl()
 
   // remove t from siteId if t is included
