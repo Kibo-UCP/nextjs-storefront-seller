@@ -388,7 +388,9 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               name: quote?.name as string,
               expirationDate: quote?.expirationDate,
             })
-            onAccountTitleClick()
+            if (updateQuote.isSuccess) {
+              onAccountTitleClick()
+            }
           },
           title: isApproving ? t('approve-quote-title') : t('submit-quote-title'),
           contentText: isApproving
