@@ -5,6 +5,7 @@ import { FiberManualRecord } from '@mui/icons-material'
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import Close from '@mui/icons-material/Close'
 import Done from '@mui/icons-material/Done'
+import { LoadingButton } from '@mui/lab'
 import {
   Stack,
   Typography,
@@ -1149,15 +1150,16 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                               >
                                 {t('cancel')}
                               </Button>
-                              <Button
+                              <LoadingButton
                                 variant="contained"
                                 color="inherit"
                                 style={{ textTransform: 'none' }}
                                 onClick={handleAddressValidationAndSave}
+                                loading={validateForm}
                                 {...(!isAddressFormValid && { disabled: true })}
                               >
                                 {t('save-shipping-address')}
-                              </Button>
+                              </LoadingButton>
                             </Grid>
                           </Grid>
                         </Box>
