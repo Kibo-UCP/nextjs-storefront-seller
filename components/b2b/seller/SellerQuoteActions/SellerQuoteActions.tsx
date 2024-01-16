@@ -3,6 +3,7 @@ import { Grid, Stack, NoSsr, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { QuoteStatus } from '@/lib/constants'
+import { quoteGetters } from '@/lib/getters'
 
 interface SellerQuoteActionsProps {
   hasDraft: boolean
@@ -43,8 +44,7 @@ export default function SellerQuoteActions({
         >
           {
             <Box display={'flex'} gap={2} whiteSpace={'nowrap'}>
-              {(QuoteStatus[status] === QuoteStatus.Pending ||
-                QuoteStatus[status] === QuoteStatus.InReview) &&
+              {quoteGetters.isClearChangesButton(status) &&
                 (mode === 'create' || mode === 'edit') && (
                   <LoadingButton
                     variant="contained"
@@ -63,9 +63,7 @@ export default function SellerQuoteActions({
                   sx={{ width: { xs: '50%', md: '100%' } }}
                   disabled={
                     // add sales-rep check
-                    QuoteStatus[status] === QuoteStatus.Completed ||
-                    QuoteStatus[status] === QuoteStatus.Expired ||
-                    QuoteStatus[status] === QuoteStatus.ReadyForCheckout
+                    quoteGetters.isEditQuoteButtonDisabled(status)
                   }
                   onClick={handleEditQuote}
                 >

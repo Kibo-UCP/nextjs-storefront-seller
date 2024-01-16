@@ -152,7 +152,7 @@ const QuotesTable = (props: QuotesTableProps) => {
 
   const handleEditQuote = (e: SyntheticEvent<Element, Event>, quoteId: string) => {
     e.stopPropagation()
-    router.push(`/my-account/b2b/quote/${quoteId}`)
+    router.push(`/my-account/b2b/quote/${quoteId}?manageQuote=true`)
     handleClose()
   }
 
@@ -342,7 +342,8 @@ const QuotesTable = (props: QuotesTableProps) => {
                                 disabled={
                                   !(
                                     QuoteStatus[status] === QuoteStatus.ReadyForCheckout ||
-                                    QuoteStatus[status] === QuoteStatus.Expired
+                                    QuoteStatus[status] === QuoteStatus.Expired ||
+                                    QuoteStatus[status] === QuoteStatus.InReview
                                   )
                                 }
                                 onClick={(e) => handleEmailQuote(e, quoteId)}
@@ -398,7 +399,8 @@ const QuotesTable = (props: QuotesTableProps) => {
             <Typography variant="body2">{t('edit-quote')}</Typography>
           </MenuItem>
           {(QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.ReadyForCheckout ||
-            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.Expired) && (
+            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.Expired ||
+            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.InReview) && (
             <MenuItem onClick={(e) => handleEmailQuote(e, anchorEl?.quote?.id as string)}>
               <Typography variant="body2">{t('email-quote')}</Typography>
             </MenuItem>
