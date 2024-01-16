@@ -3,7 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import getConfig from 'next/config'
 import { parse } from 'url'
 
-import { adminAuthClient } from '../util'
+import { apiAuthClient } from '../util/api-auth-client'
+import { getApiConfig } from '../util/config-helpers'
 import { prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
 
 const { publicRuntimeConfig } = getConfig()
@@ -64,15 +65,51 @@ const getRefreshToken = (req: NextApiRequest) => {
   }
 }
 
+const getAdminUserHost = (tenant: string) => {
+  const adminUserHost = getApiConfig().adminUserHost
+  const url = `https://${adminUserHost}${tenant}`
+  return url
+}
+
 const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get tenant, site, redirect and refreshToken from request
   const { query } = parse(req.url as string, true)
-
   const { tenant, site } = query
   const refreshToken = getRefreshToken(req)
 
-  const response = await adminAuthClient.refreshUserAuth(refreshToken as string, tenant as string)
-  const token = adminAuthClient.createToken(response, tenant as string, site as string)
+  // Get authToken
+  const authToken = await apiAuthClient.getAccessToken()
+
+  // Construct url and headers
+  const url = getAdminUserHost(tenant as string)
+
+  const headers = new Headers()
+  headers.set('x-vol-tenant', tenant as string)
+  headers.set('Authorization', `Bearer ${authToken}`)
+  headers.set('Content-Type', 'application/json')
+
+  // Fetch user-claims
+  const jsonResponse = await fetch(url, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({
+      refreshToken,
+    }),
+  })
+
+  const response = await jsonResponse.json()
+
+  // Set cookie
+  const token = {
+    userId: response?.user?.userId,
+    userName: response?.user?.userName,
+    accessToken: response?.accessToken,
+    accessTokenExpiration: response?.accessTokenExpiration,
+    refreshToken: response?.refreshToken,
+    refreshTokenExpiration: response?.refreshTokenExpiration,
+    tenant,
+    site,
+  }
 
   res.setHeader(
     'Set-Cookie',

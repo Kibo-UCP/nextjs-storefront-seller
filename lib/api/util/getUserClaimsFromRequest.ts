@@ -1,7 +1,6 @@
 import { ServerResponse } from 'http'
 import getConfig from 'next/config'
 
-import adminAuthClient from './adminAuthClient'
 import { shopperAuthClient } from './api-auth-client'
 import { isShopperAuthExpired } from './config-helpers'
 import { decodeParseCookieValue, prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
@@ -28,33 +27,19 @@ const getUserClaimsFromRequest = async (
     }
 
     const accountId = authTicket?.accountId
-    let token
-
     // shopper is anonymous
     // else logged in user ticket needs to be refreshed
     if (!authTicket) {
       authTicket = await shopperAuthClient.anonymousAuth()
     } else {
-      const isSeller = authTicket?.isSeller
-      const tenant = authTicket?.tenant
-      const site = authTicket?.site
-      const refreshToken = authTicket?.refreshToken
-      let response
-
-      if (isSeller) {
-        response = await adminAuthClient.refreshUserAuth(refreshToken, tenant)
-        token = adminAuthClient.createToken(response, tenant as string, site as string)
-      } else {
-        response = await shopperAuthClient.refreshUserAuth(authTicket)
-        if (response.accessToken) {
-          authTicket = response
-        }
-        token = { ...authTicket, accountId }
+      const response = await shopperAuthClient.refreshUserAuth(authTicket)
+      if (response.accessToken) {
+        authTicket = response
       }
     }
     res.setHeader(
       'Set-Cookie',
-      authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
+      authCookieName + '=' + prepareSetCookieValue({ ...authTicket, accountId }) + ';path=/'
     )
 
     return authTicket.accessToken
