@@ -4,6 +4,7 @@ import {
   getOperationDetails,
   getUserClaimsFromRequest,
 } from '../util'
+import { getSellerTenantInfo } from '../util/seller'
 import { KIBO_HEADERS } from '@/lib/constants'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
@@ -60,7 +61,8 @@ export default async function graphQLHandler(req: NextApiRequestWithLogger, res:
 
     const headers = getAdditionalHeader(req)
     const userClaims = await getUserClaimsFromRequest(req, res)
-    const response = await fetcher({ query, variables }, { userClaims, headers })
+    const sellerTenantInfo = getSellerTenantInfo(req)
+    const response = await fetcher({ query, variables }, { userClaims, headers }, sellerTenantInfo)
 
     const correlationId = response.headers && response.headers.get(KIBO_HEADERS.CORRELATION_ID)
     correlationId && req.logger.info({ gql: gqlDetails, correlationId })
