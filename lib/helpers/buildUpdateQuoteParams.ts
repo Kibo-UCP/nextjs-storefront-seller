@@ -4,7 +4,8 @@ export const buildUpdateQuoteParams = (
   quoteId: string,
   updateMode: string,
   name?: string,
-  expirationDate?: string
+  expirationDate?: string,
+  status?: string
 ): MutationUpdateQuoteArgs => {
   return {
     quoteId,
@@ -33,6 +34,7 @@ export const buildUpdateQuoteParams = (
       handlingTotal: 0,
       dutyTotal: 0,
       feeTotal: 0,
+      status,
     },
   }
 }

@@ -250,16 +250,14 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     pickupItems
   )
 
-  const userShippingAddress = isAuthenticated
-    ? userGetters.getUserShippingAddress(addressCollection?.items as CustomerContact[])
-    : []
+  const b2bAccountShippingAddress = userGetters.getUserShippingAddress(b2bAccount?.contacts)
 
   const [savedShippingAddresses, setSavedShippingAddresses] = useState<
     CustomerContact[] | undefined
   >(
     userGetters.getAllShippingAddresses(
       quoteShippingContact,
-      userShippingAddress as CustomerContact[]
+      b2bAccountShippingAddress as CustomerContact[]
     )
   )
   const showPreviouslySavedAddress = savedShippingAddresses && savedShippingAddresses.length > 0
@@ -381,14 +379,17 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
       showModal({
         Component: ConfirmationDialog,
         props: {
-          onConfirm: () => {
-            updateQuote.mutate({
+          onConfirm: async () => {
+            const response = await updateQuote.mutateAsync({
               quoteId,
               updateMode: QuoteUpdateMode.ApplyAndCommit,
               name: quote?.name as string,
               expirationDate: quote?.expirationDate,
+              status: quote?.status as string,
             })
-            onAccountTitleClick()
+            if (response?.id) {
+              onAccountTitleClick()
+            }
           },
           title: isApproving ? t('approve-quote-title') : t('submit-quote-title'),
           contentText: isApproving
@@ -671,10 +672,14 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     setSavedShippingAddresses(
       userGetters.getAllShippingAddresses(
         quoteShippingContact,
-        userShippingAddress as CustomerContact[]
+        b2bAccountShippingAddress as CustomerContact[]
       )
     )
-  }, [JSON.stringify(quoteShippingContact), JSON.stringify(userShippingAddress), isNewAddressAdded])
+  }, [
+    JSON.stringify(quoteShippingContact),
+    JSON.stringify(b2bAccountShippingAddress),
+    isNewAddressAdded,
+  ])
 
   useEffect(() => {
     setQuoteNameInputValue(quote?.name ? quote?.name : '')
