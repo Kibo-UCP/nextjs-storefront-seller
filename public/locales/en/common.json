@@ -539,5 +539,6 @@
   "all-quotes": "All Quotes",
   "approve-quote-with-changes": "Approve quote with changes",
   "digital-products-shipping-text": "No shipping information is required since all items will be picked up in the store or digitally fulfilled.",
-  "digital-products": "Digital Products"
+  "digital-products": "Digital Products",
+  "enter-valid-country-code": "The country code must be two letters."
 }

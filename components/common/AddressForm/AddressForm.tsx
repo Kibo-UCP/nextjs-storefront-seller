@@ -45,7 +45,10 @@ export const useFormSchema = () => {
         is: CountryCode.US || CountryCode.CA,
         then: yup.string().required(t('this-field-is-required')).min(4, t('enter-valid-zip-code')),
       }),
-      countryCode: yup.string().required(t('this-field-is-required')),
+      countryCode: yup
+        .string()
+        .required('This field is required')
+        .matches(/^[A-Z]{2}$/i, t('enter-valid-country-code')),
     }),
     phoneNumbers: yup.object().shape({
       home: yup.string().required(t('this-field-is-required')),
@@ -276,23 +279,20 @@ const AddressForm = (props: AddressFormProps) => {
           <Controller
             name="address.countryCode"
             control={control}
-            defaultValue={
-              contact?.address?.countryCode || countries.length === 1 ? countries[0] : ''
-            }
+            defaultValue={contact?.address?.countryCode}
             render={({ field }) => (
               <div>
-                <KiboSelect
-                  name="country-code"
+                <KiboTextBox
+                  {...field}
+                  value={field.value || ''}
                   label={t('country-code')}
-                  value={field.value}
+                  ref={null}
                   error={!!errors?.address?.countryCode}
                   helperText={errors?.address?.countryCode?.message}
-                  onChange={(_name, value) => field.onChange(value)}
+                  onChange={(_name, value) => field.onChange(value.toUpperCase())}
                   onBlur={field.onBlur}
                   required={true}
-                >
-                  {generateSelectOptions()}
-                </KiboSelect>
+                />
               </div>
             )}
           />

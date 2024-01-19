@@ -19,12 +19,13 @@ interface UpdateQuoteProps {
   updateMode: string
   name?: string
   expirationDate?: string
+  status?: string
 }
 const updateQuote = async (props: UpdateQuoteProps): Promise<Quote> => {
   const client = makeGraphQLClient()
-  const { quoteId, updateMode, name, expirationDate } = props
+  const { quoteId, updateMode, name, expirationDate, status } = props
 
-  const variables = buildUpdateQuoteParams(quoteId, updateMode, name, expirationDate)
+  const variables = buildUpdateQuoteParams(quoteId, updateMode, name, expirationDate, status)
 
   const response = await client.request({
     document: updateQuoteMutation,
