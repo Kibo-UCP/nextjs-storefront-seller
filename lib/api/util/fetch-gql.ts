@@ -41,15 +41,6 @@ const fetcher = async (
     ...options.headers,
   }
 
-  console.error('------Seller Headers-------', {
-    url,
-    headers: JSON.stringify(headers),
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  })
-
   const response = await fetch(url, {
     method: 'POST',
     headers: headers,
