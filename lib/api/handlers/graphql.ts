@@ -57,7 +57,7 @@ export default async function graphQLHandler(req: NextApiRequestWithLogger, res:
   try {
     const { query, variables } = req.body
     const gqlDetails = getOperationDetails(query)
-    req.logger.info({ gql: gqlDetails }, 'incoming graphql request')
+    req.logger.info('incoming graphql request', { gql: gqlDetails })
 
     const headers = getAdditionalHeader(req)
     const userClaims = await getUserClaimsFromRequest(req, res)
@@ -79,7 +79,7 @@ export default async function graphQLHandler(req: NextApiRequestWithLogger, res:
     res.status(200).json(response)
   } catch (error: any) {
     if (error instanceof GraphQLError) {
-      req.logger.error(error.toJson(), error.dumpErrors())
+      req.logger.error(error.dumpErrors(), error.toJson())
     } else {
       req.logger.error(error)
     }

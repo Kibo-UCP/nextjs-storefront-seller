@@ -2,7 +2,7 @@ import getConfig from 'next/config'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 
 import { NextApiRequestWithLogger } from '@/lib/types'
-import {logger} from '@/next-logger.config'
+import { logger } from '@/next-logger.config'
 
 type ApiHandler = (
   req: NextApiRequest | NextApiRequestWithLogger,
@@ -61,7 +61,19 @@ function requestMetaData(req: NextApiRequest) {
     variables: req.body.variables,
   }
 }
-
+function reverseProxyApiContextMeta(req: NextApiRequest) {
+  const meta = {} as any
+  if (req.headers['x-vol-tenant']) {
+    meta.TenantId = req.headers['x-vol-tenant']
+  }
+  if (req.headers['x-vol-site']) {
+    meta.SiteId = req.headers['x-vol-site']
+  }
+  if (req.headers['x-vol-correlation']) {
+    meta.CorrelationId = req.headers['x-vol-correlation']
+  }
+  return meta
+}
 function responseMetaData(res: NextApiResponse) {
   return { statusCode: res.statusCode }
 }
@@ -69,18 +81,20 @@ function responseMetaData(res: NextApiResponse) {
 export default function withLogger(handle: ApiHandler) {
   return async (request: NextApiRequest, response: NextApiResponse) => {
     const start = Date.now()
+
     const requestLogger = logger.child({
       handlerName: handle.name,
-      request: requestMetaData(request),
+      http: requestMetaData(request),
+      ...reverseProxyApiContextMeta(request),
     })
     ;(request as any).logger = requestLogger
 
     requestLogger.info('Request start')
 
     await handle(request, response)
-    requestLogger.info(
-      'Request end',
-      { duration: Date.now() - start, response: responseMetaData(response) },
-    )
+    requestLogger.info('Request end', {
+      duration: Date.now() - start,
+      response: responseMetaData(response),
+    })
   }
 }
