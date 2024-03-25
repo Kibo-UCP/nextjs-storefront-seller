@@ -1,7 +1,10 @@
 import getConfig from 'next/config'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
-export default async function testingEcho(req: NextApiRequest, res: NextApiResponse) {
+import type { NextApiRequestWithLogger } from '@/lib/types'
+
+import type { NextApiResponse } from 'next'
+
+export default async function testingEcho(req: NextApiRequestWithLogger, res: NextApiResponse) {
   try {
     const { publicRuntimeConfig } = getConfig()
     res.status(200).json({
