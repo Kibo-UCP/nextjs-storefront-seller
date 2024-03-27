@@ -1,8 +1,9 @@
 import getConfig from 'next/config'
 import { NextApiRequest, NextApiResponse } from 'next/types'
+import url from 'url'
 
 import { NextApiRequestWithLogger } from '@/lib/types'
-import logger from '@/next-logger.config'
+import { logger } from '@/next-logger.config'
 
 type ApiHandler = (
   req: NextApiRequest | NextApiRequestWithLogger,
@@ -51,17 +52,48 @@ const getSite = (req: NextApiRequest) => {
   return site || ''
 }
 
-function requestMetaData(req: NextApiRequest) {
-  return {
-    url: req.url,
-    tenant: getTenant(req),
-    site: getSite(req),
-    userId: getUserId(req),
-    'X-Forwarded-For': req.socket.remoteAddress,
-    variables: req.body.variables,
+function requestHttpMetaData(req: NextApiRequest) {
+  let parsedUrl
+  if (req.url) {
+    parsedUrl = url.parse(req.url || '', true)
   }
+  const http = {
+    host: req.headers.host,
+    method: req.method,
+    protocol: parsedUrl?.protocol,
+    referer: req.headers['referer'] || req.headers['referrer'],
+    useragent: req.headers['user-agent'],
+  } as any
+  if (parsedUrl) {
+    http.url = {
+      path: parsedUrl.pathname,
+    }
+    http.url_details = parsedUrl.query
+  }
+  return http
 }
-
+function reverseProxyApiContextMeta(req: NextApiRequest) {
+  const meta = {} as any
+  if (req.headers['x-vol-tenant']) {
+    meta.TenantId = parseInt(req.headers['x-vol-tenant'] as string)
+  }
+  if (req.headers['x-vol-site']) {
+    meta.SiteId = parseInt(req.headers['x-vol-site'] as string)
+  }
+  if (req.headers['x-vol-correlation']) {
+    meta.CorrelationId = req.headers['x-vol-correlation']
+  }
+  const userId = getUserId(req)
+  if (userId) {
+    meta.UserId = userId
+  }
+  if (req.headers['X-Forwarded-For']) {
+    meta.network = {
+      ips: req.headers['X-Forwarded-For'],
+    }
+  }
+  return meta
+}
 function responseMetaData(res: NextApiResponse) {
   return { statusCode: res.statusCode }
 }
@@ -69,18 +101,22 @@ function responseMetaData(res: NextApiResponse) {
 export default function withLogger(handle: ApiHandler) {
   return async (request: NextApiRequest, response: NextApiResponse) => {
     const start = Date.now()
+
     const requestLogger = logger.child({
       handlerName: handle.name,
-      request: requestMetaData(request),
+      http: requestHttpMetaData(request),
+      ...reverseProxyApiContextMeta(request),
     })
     ;(request as any).logger = requestLogger
 
     requestLogger.info('Request start')
 
     await handle(request, response)
-    requestLogger.info(
-      { duration: Date.now() - start, response: responseMetaData(response) },
-      'Request end'
-    )
+    if (requestLogger.defaultMeta?.http) {
+      requestLogger.defaultMeta.http.status_code = response.statusCode
+    }
+    requestLogger.info('Request end', {
+      duration: Date.now() - start,
+    })
   }
 }

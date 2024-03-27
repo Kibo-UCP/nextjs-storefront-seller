@@ -7,7 +7,7 @@ const getAPIAuthToken = async () => {
 
 const getAdminUserHost = (tenant: string) => {
   const adminUserHost = getApiConfig().adminUserHost
-  return `https://${adminUserHost}${tenant}`
+  return `${adminUserHost}${tenant}`
 }
 
 const createToken = (response: any, tenant: string, site: string) => {
