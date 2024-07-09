@@ -49,8 +49,15 @@ const fetcher = async (
       variables,
     }),
   })
-  const jsonResponse = await response.json()
-
+  let jsonResponse
+  try {
+    const txtResponse = await response.text()
+    console.log(`gql response status: ${response.status}`, txtResponse)
+    jsonResponse = JSON.parse(txtResponse)
+  } catch (error:any) {
+    console.error(error)
+    jsonResponse = { error: error?.message || "error"}
+  }
   return jsonResponse
 }
 export default fetcher
