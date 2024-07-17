@@ -12,8 +12,10 @@ const getAdditionalHeader = (req: NextApiRequest) => {
 
   // add additional headers here
   const headers = {
-    'x-forwarded-for': forwardedFor,
-    'x-forwarded-proto': 'https',
+    // removing client (users) ip for now
+    // gql now calls public rp which blocks due to interal access token
+    // 'x-forwarded-for': forwardedFor,
+    'x-forwarded-proto': 'https'
   }
 
   return headers
