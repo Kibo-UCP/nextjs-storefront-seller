@@ -5,9 +5,10 @@ export default async function testingEcho(req: NextApiRequest, res: NextApiRespo
   try {
     const { publicRuntimeConfig } = getConfig()
     res.status(200).json({
-      pciHost: publicRuntimeConfig?.pciHost,
+      appDevHost: process.env.KIBO_APPDEV_HOST,
+      adminUserHost: process.env.KIBO_ADMIN_USER_HOST,
       apiHost: publicRuntimeConfig?.apiHost,
-      authHost: process.env.KIBO_AUTH_HOST,
+      pciHost: publicRuntimeConfig?.pciHost
     })
   } catch (error) {
     console.error(error)
