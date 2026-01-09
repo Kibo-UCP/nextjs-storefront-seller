@@ -64,21 +64,39 @@ const getRefreshToken = (req: NextApiRequest) => {
   }
 }
 
-const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
+const saveSellerToken = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<{ success: boolean; error?: string }> => {
   // Get tenant, site, redirect and refreshToken from request
   const { query } = parse(req.url as string, true)
 
   const { tenant, site } = query
   const refreshToken = getRefreshToken(req)
-  // const refreshToken = '34e64f93f5694e83bbe1d28137ea663d'
 
-  const response = await adminAuthClient.refreshUserAuth(refreshToken as string, tenant as string)
-  const token = adminAuthClient.createToken(response, tenant as string, site as string)
+  if (!refreshToken) {
+    console.error('saveSellerToken: No refresh token found in cookies')
+    return { success: false, error: 'No refresh token found' }
+  }
 
-  res.setHeader(
-    'Set-Cookie',
-    authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
-  )
+  if (!tenant) {
+    console.error('saveSellerToken: No tenant provided in query')
+    return { success: false, error: 'No tenant provided' }
+  }
+
+  try {
+    const response = await adminAuthClient.refreshUserAuth(refreshToken as string, tenant as string)
+    const token = adminAuthClient.createToken(response, tenant as string, site as string)
+
+    res.setHeader(
+      'Set-Cookie',
+      authCookieName + '=' + prepareSetCookieValue({ ...token }) + ';path=/'
+    )
+    return { success: true }
+  } catch (error) {
+    console.error('saveSellerToken: Error refreshing user auth:', error)
+    return { success: false, error: 'Failed to refresh user authentication' }
+  }
 }
 
 export default saveSellerToken
