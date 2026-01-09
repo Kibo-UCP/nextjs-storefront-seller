@@ -74,18 +74,30 @@ const saveSellerToken = async (
   const { tenant, site } = query
   const refreshToken = getRefreshToken(req)
 
+  console.log('saveSellerToken: Starting with params:', {
+    tenant,
+    site,
+    hasRefreshToken: !!refreshToken,
+    refreshTokenLength: refreshToken?.length,
+    cookies: req.headers.cookie ? '[present]' : '[missing]',
+  })
+
   if (!refreshToken) {
-    console.error('saveSellerToken: No refresh token found in cookies')
+    console.error(
+      'saveSellerToken: No refresh token found in cookies. Cookie header:',
+      req.headers.cookie
+    )
     return { success: false, error: 'No refresh token found' }
   }
 
   if (!tenant) {
-    console.error('saveSellerToken: No tenant provided in query')
+    console.error('saveSellerToken: No tenant provided in query. Full URL:', req.url)
     return { success: false, error: 'No tenant provided' }
   }
 
   try {
     const response = await adminAuthClient.refreshUserAuth(refreshToken as string, tenant as string)
+    console.log('saveSellerToken: Successfully refreshed auth for tenant:', tenant)
     const token = adminAuthClient.createToken(response, tenant as string, site as string)
 
     res.setHeader(
@@ -94,7 +106,12 @@ const saveSellerToken = async (
     )
     return { success: true }
   } catch (error) {
-    console.error('saveSellerToken: Error refreshing user auth:', error)
+    console.error('saveSellerToken: Error refreshing user auth:', {
+      error: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+      tenant,
+      site,
+    })
     return { success: false, error: 'Failed to refresh user authentication' }
   }
 }
