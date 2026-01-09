@@ -16,6 +16,11 @@ export default async function createQuote(
 
   const headers = req ? getAdditionalHeader(req) : {}
 
+  console.log(
+    'createQuote - customerAccountId:',
+    buildCreateQuoteParams(parseInt(customerAccountId))
+  )
+
   const response = await fetcher(
     {
       query: createQuoteMutation,
@@ -24,6 +29,8 @@ export default async function createQuote(
     { userClaims, headers },
     getSellerTenantInfo(req)
   )
+
+  console.log('createQuote - response:', response)
 
   return response?.data?.createQuote
 }

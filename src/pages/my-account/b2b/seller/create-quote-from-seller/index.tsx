@@ -9,6 +9,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { customerAccountId, mode = 'create', manageQuote = false } = query as any
 
+  console.log('create-quote', query)
+
   const createQuoteResponse = await createQuote(
     req as NextApiRequest,
     res as NextApiResponse,

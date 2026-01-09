@@ -70,6 +70,7 @@ const saveSellerToken = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { tenant, site } = query
   const refreshToken = getRefreshToken(req)
+  // const refreshToken = '34e64f93f5694e83bbe1d28137ea663d'
 
   const response = await adminAuthClient.refreshUserAuth(refreshToken as string, tenant as string)
   const token = adminAuthClient.createToken(response, tenant as string, site as string)

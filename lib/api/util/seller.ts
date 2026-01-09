@@ -29,6 +29,7 @@ const getSellerTenantInfo = (req: NextApiRequest | undefined) => {
 
   const parsedCookie = parsedCookies[cookieName]
   const decodedCookie = decodeParseCookieValue(parsedCookie)
+  console.log('getSellerTenantInfo - decodedCookie:', decodedCookie)
 
   if (decodedCookie?.tenant && decodedCookie?.site) {
     return { tenant: decodedCookie?.tenant, site: decodedCookie?.site }

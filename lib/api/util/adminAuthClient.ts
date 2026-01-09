@@ -27,16 +27,17 @@ const createToken = (response: any, tenant: string, site: string) => {
 const refreshUserAuth = async (refreshToken: string, tenant: string) => {
   if (!tenant) throw new Error('No tenant provided')
   if (!refreshToken) throw new Error('No refresh token provided')
-
-  const apiAuthToken = await getAPIAuthToken()
-  const url = getAdminUserHost(tenant as string)
-
-  const headers = new Headers()
-  headers.set('x-vol-tenant', tenant as string)
-  headers.set('Authorization', `Bearer ${apiAuthToken}`)
-  headers.set('Content-Type', 'application/json')
-
+  console.log('refreshUserAuth - refreshToken:', refreshToken)
   try {
+    const apiAuthToken = await getAPIAuthToken()
+    console.log('refreshUserAuth - apiAuthToken:', apiAuthToken)
+    const url = getAdminUserHost(tenant as string)
+
+    const headers = new Headers()
+    headers.set('x-vol-tenant', tenant as string)
+    headers.set('Authorization', `Bearer ${apiAuthToken}`)
+    headers.set('Content-Type', 'application/json')
+
     const jsonResponse = await fetch(url, {
       method: 'PUT',
       headers,
@@ -48,7 +49,8 @@ const refreshUserAuth = async (refreshToken: string, tenant: string) => {
     if (!jsonResponse.ok) throw new Error('Error refreshing user Token')
     return await jsonResponse.json()
   } catch (err) {
-    console.error('Error refreshing user Token: ', err)
+    console.error('Error getting API auth token: ', err)
+    throw err
   }
 }
 
